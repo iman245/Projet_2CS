@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from publication import views
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',views.users_list, name='users_list'),  # URL for listing users
+    path('users/', views.UtilisateurAPIView.as_view(), name='user-list'),
+    path('publication/<int:publication_id>/', views.publication_detail, name='publication_detail'),  # URL for publication detail with ID
 ]
