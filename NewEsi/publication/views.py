@@ -17,23 +17,24 @@ def publication_detail(request, publication_id):
 class UtilisateurAPIView(APIView):
     def get(self, request):
         param_value = request.query_params.get('all_users')
-        if param_value:
-            queryset = Utilisateur.objects.all()
-            serializer = UtilisateurSerializer(queryset, many=True)
-            return Response(serializer.data)
+        
+        queryset = Utilisateur.objects.all()
+        serializer = UtilisateurSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     def post(self, request):
-        param_value = request.query_params.get('add_users')
-        if param_value:
-            serializer = UtilisateurSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        param_value = request.query_params.get('edit_users')
-        if param_value:
-            serializer = UtilisateurSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)       
+        
+        serializer = UtilisateurSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class EditUserAPIView(APIView):
+  def post(self, request, pk):  # Accept the user ID as a URL parameter
+        user = Utilisateur.objects.get(pk=pk)  # Get the user object based on the provided ID
+        serializer = UtilisateurSerializer(user, data=request.data)  # Initialize the serializer with the user object and request data
+        if serializer.is_valid():
+            serializer.save()  # Save the changes to the user object
+            return Response(serializer.data, status=status.HTTP_200_OK)  # Return the updated user data
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # Return any validation errors

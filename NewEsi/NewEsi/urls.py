@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.users_list, name='users_list'),  # URL for listing users
     path('users/', views.UtilisateurAPIView.as_view(), name='user-list'),
+    path('users/edit/<int:pk>/', views.EditUserAPIView.as_view(), name='user-edit'),
     path('publication/<int:publication_id>/', views.publication_detail, name='publication_detail'),  # URL for publication detail with ID
 ]
