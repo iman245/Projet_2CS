@@ -16,11 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from publication import views
+from publication.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.users_list, name='users_list'),  # URL for listing users
-    path('users/', views.UtilisateurAPIView.as_view(), name='user-list'),
-    path('users/edit/<int:pk>/', views.EditUserAPIView.as_view(), name='user-edit'),
-    path('publication/<int:publication_id>/', views.publication_detail, name='publication_detail'),  # URL for publication detail with ID
+    path('users/', get_all_users, name='get_all_users'),  # URL for getting all users and creating new users
+    path('users/edit/<int:pk>/', edit_user, name='edit_user'),  # URL for editing a specific user
+    path('users/search/', search_user, name='search_user'),  # URL for searching users by name
+    path('users/add',add_user,name='add_user'),
+    path('users/delete/<int:pk>/',delete_user,name='delete_user'),
+    path('publication/', get_all_publications, name='get_all_publications'),
+    path('publication/add/', add_publication, name='add_publication'),
+    path('publication/<int:pk>/', edit_publication, name='edit_publication'),
+    path('publication/search/',search_publication,name='search_publication'),
+    path('publication/delete/<int:pk>/', delete_publication, name='delete_publication'),
+
 ]

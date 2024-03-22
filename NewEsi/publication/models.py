@@ -1,7 +1,7 @@
 from django.db import models
 
 class Utilisateur(models.Model):
-    id_utilisateur = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     contact = models.IntegerField(null=True, blank=True)
     email = models.EmailField(max_length=255)
@@ -14,15 +14,15 @@ class Chercheur(Utilisateur):
     #link to a lab
     pass
 
-class Categorie(models.Model):
-    id_categorie = models.IntegerField(primary_key=True)
+'''class Categorie(models.Model):
+    id_categorie = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.nom
+        return self.nom'''
 
 class Publication(models.Model):
-    id_publication = models.IntegerField(primary_key=True)
+    id_publication = models.AutoField(primary_key=True)
     titre = models.CharField(max_length=255)
     description = models.TextField()
     image = models.ImageField(upload_to='publications/', null=True, blank=True)
@@ -31,7 +31,9 @@ class Publication(models.Model):
     date_debut = models.DateTimeField(null=True, blank=True)
     date_fin = models.DateTimeField(null=True, blank=True)
     date_publication = models.DateTimeField(null=True, blank=True)
-    category = models.ForeignKey(Categorie, on_delete=models.CASCADE)#if category gets deleted all post gets deleted 
+    #category = models.ForeignKey(Categorie, on_delete=models.CASCADE)#if category gets deleted all post gets deleted 
+    #I don't think it should be a class by it's own if we won't change the class frequently
+    category=models.CharField(max_length=50)
     def __str__(self):
         return self.titre
 
