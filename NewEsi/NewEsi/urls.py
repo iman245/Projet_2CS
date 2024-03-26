@@ -15,11 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from publication.views import *
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('users/', get_all_users, name='get_all_users'),  # URL for getting all users and creating new users
+     path('admin/', admin.site.urls),
+     path("accounts/",include("allauth.urls")),
+
+]
+x=   ''' path('users/', get_all_users, name='get_all_users'),  # URL for getting all users and creating new users
     path('users/edit/<int:pk>/', edit_user, name='edit_user'),  # URL for editing a specific user
     path('users/search/', search_user, name='search_user'),  # URL for searching users by name
     path('users/add',add_user,name='add_user'),
@@ -28,6 +31,4 @@ urlpatterns = [
     path('publication/add/', add_publication, name='add_publication'),
     path('publication/<int:pk>/', edit_publication, name='edit_publication'),
     path('publication/search/',search_publication,name='search_publication'),
-    path('publication/delete/<int:pk>/', delete_publication, name='delete_publication'),
-
-]
+    path('publication/delete/<int:pk>/', delete_publication, name='delete_publication'),'''
