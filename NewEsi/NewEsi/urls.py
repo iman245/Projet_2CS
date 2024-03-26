@@ -23,6 +23,7 @@ urlpatterns = [
     path('users/edit/<int:pk>/', edit_user, name='edit_user'),  # URL for editing a specific user
     path('users/search/', search_user, name='search_user'),  # URL for searching users by name
     path('users/add',add_user,name='add_user'),
+    path('users/login',login_user,name='login_user'),
     path('users/delete/<int:pk>/',delete_user,name='delete_user'),
     path('publication/', get_all_publications, name='get_all_publications'),
     path('publication/add/', add_publication, name='add_publication'),

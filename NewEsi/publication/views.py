@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from .models import Utilisateur, Publication
 from .serializer import *
-from rest_framework.views import APIView
+from rest_framework.views import APIView 
 from rest_framework.response import Response
 from rest_framework import status 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view , permission_classes
+from rest_framework.permissions import AllowAny
 from django.db.models import Q
 @api_view(['GET'])
 def get_all_users(request):
@@ -13,7 +14,8 @@ def get_all_users(request):
         serializer = UtilisateurSerializer(queryset, many=True)
         return Response(serializer.data)
     
-@api_view(['POST'])  
+@api_view(['POST']) 
+@permission_classes([AllowAny])   
 def add_user(request):
     if request.method == 'POST':
         data = request.data.copy()  # Create a copy of the request data
@@ -22,12 +24,28 @@ def add_user(request):
             serializer = UtilisateurSerializer(data=data, many=True)
         else:  # If data is a single object
             serializer = UtilisateurSerializer(data=data)
-       
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_user(request):
+    if request.method == 'POST':
+        email = request.data.get('email', None)
+
+        if not email:
+            return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+        if Utilisateur.objects.filter(email=email).exists():
+            user = Utilisateur.objects.get(email=email)
+        else:
+            user = Utilisateur.objects.create(email=email)
+
+        token = Token.objects.get(user=user)
+        return Response({"token": token.key}, status=status.HTTP_200_OK if user else status.HTTP_201_CREATED)
+
+        
 @api_view(['PUT'])
 def edit_user(request, pk):
     try:
