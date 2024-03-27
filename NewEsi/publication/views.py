@@ -192,6 +192,129 @@ def delete_publication(request, pk):
 
 
 
+@api_view(['POST'])
+def add_partenaire(request):
+   if request.method == 'POST':
+        if isinstance(request.data, list):  # If data is an array
+            serializer = PartenaireSerializer(data=request.data, many=True)
+        else:  # If data is a single object
+            serializer = PartenaireSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_all_partenaire(request):
+    if request.method == 'GET':
+        queryset = Partenaire.objects.all()
+        serializer = PartenaireSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def get_partenaire(request):
+    partenaire_id = request.query_params.get('id')
+    if partenaire_id is None:
+        return Response("ID du partenaire manquant dans les paramètres de requête", status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        partenaire = Partenaire.objects.get(pk=partenaire_id)
+        serializer = PartenaireSerializer(partenaire)
+        return Response(serializer.data)
+    except Partenaire.DoesNotExist:
+        return Response("Partenaire introuvable", status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def post_demande_partenariat(request):
+    if request.method == 'POST':
+        serializer = DemandePartenariatSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def get_all_demande_partenariat(request):
+    if request.method == 'GET':
+        demandes = Demande_Partenariat.objects.all()
+        serializer = DemandePartenariatSerializer(demandes, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['PUT'])
+def accepter_demande_partenariat(request):
+    demande_id = request.query_params.get('id')
+    if demande_id is None:
+        return Response("ID de la demande de partenariat manquant", status=status.HTTP_400_BAD_REQUEST)
+    try:
+        demande = Demande_Partenariat.objects.get(pk=demande_id)
+        demande.etat = 'Acceptée'
+        demande.save()
+        nom_partenaire = demande.nom
+        description_partenaire = demande.description
+        contact_partenaire = demande.contact
+        email_partenaire = demande.email
+        partenaire = Partenaire.objects.create(nom=nom_partenaire, description=description_partenaire, contact=contact_partenaire, email=email_partenaire)
+
+        return Response("Demande de partenariat acceptée et le partenaire ajouté", status=status.HTTP_200_OK)
+    except Demande_Partenariat.DoesNotExist:
+        return Response("Demande de partenariat introuvable", status=status.HTTP_404_NOT_FOUND)
+
+
+
+@api_view(['PUT'])
+def refuser_demande_partenariat(request):
+    demande_id = request.query_params.get('id')
+    if demande_id is None:
+        return Response("ID de la demande de partenariat manquant", status=status.HTTP_400_BAD_REQUEST)
+    try:
+        demande = Demande_Partenariat.objects.get(pk=demande_id)
+        demande.etat = 'Refusée'
+        demande.save()
+        return Response("Demande de partenariat refusée", status=status.HTTP_200_OK)
+    except Demande_Partenariat.DoesNotExist:
+        return Response("Demande de partenariat introuvable", status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+@api_view(['POST'])
+def add_devis(request):
+    if request.method == 'POST':
+        serializer = DevisSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def valider_devis(request):
+    devis_id = request.query_params.get('devis_id')
+    if devis_id is None:
+        return Response("ID du devis manquant", status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        devis = Devis.objects.get(pk=devis_id)
+        devis.etat = 'Validé'
+        devis.save()
+        return Response("Devis validé", status=status.HTTP_200_OK)
+    except Devis.DoesNotExist:
+        return Response("Devis introuvable", status=status.HTTP_404_NOT_FOUND)
+
+
+
+@api_view(['GET'])
+def get_all_devis(request):
+    if request.method == 'GET':
+        queryset = Devis.objects.all()
+        serializer = DevisSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+
 '''def users_list(request):
     users = Utilisateur.objects.all()  # Retrieve all users from the database
     return render(request, 'users_list.html', {'users': users})

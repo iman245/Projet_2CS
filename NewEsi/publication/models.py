@@ -133,18 +133,17 @@ class Theme_Recherche(models.Model):
     
 
 class Demande_Partenariat(models.Model):
-    id_partenariat = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
     etat = models.CharField(max_length=50)
     contact = models.IntegerField(null=True, blank=True)
     email = models.EmailField(max_length=255)
+    description = models.TextField()
     def __str__(self):
         return self.nom
     
 
 class Devis(models.Model):
-    id_devis = models.IntegerField(primary_key=True)
-    etat = models.CharField(max_length=50)
+    etat = models.CharField(max_length=50 , default="en attente")
     montant = models.FloatField(null=True, blank=True) 
     def __str__(self):
         return self.montant
@@ -170,10 +169,10 @@ class Laboratoire(models.Model):
         return self.nom
 
 class Partenaire(models.Model):
-    id_partenaire = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
     description = models.TextField()
     contact = models.IntegerField(null=True, blank=True)
     email = models.EmailField(max_length=255)
+    
     def __str__(self):
         return self.nom

@@ -30,5 +30,15 @@ urlpatterns = [
     path('publication/<int:pk>/', edit_publication, name='edit_publication'),
     path('publication/search/',search_publication,name='search_publication'),
     path('publication/delete/<int:pk>/', delete_publication, name='delete_publication'),
+    path('partenaire/add',add_partenaire,name='add_partenaire'),
+    path('partenaires',get_all_partenaire,name='get_all_partenaire'),
+    path('partenaire',get_partenaire,name='get_partenaire'),
+    path('demande_partenariat',post_demande_partenariat,name='demande_partenariat'),
+    path('demande_partenariat/all',get_all_demande_partenariat,name='get_all_demande_partenariat'),
+    path('demande_partenariat/accepter',accepter_demande_partenariat,name='accepter_demande_partenariat'),
+    path('demande_partenariat/refuser',refuser_demande_partenariat,name='refuser_demande_partenariat'),
+    path('Devis/valider',valider_devis,name='valider_devis'),
+    path('Devis/demande',add_devis,name='add_devis'),
+    path('Devis',get_all_devis,name='get_all_devis'),
 
 ]
