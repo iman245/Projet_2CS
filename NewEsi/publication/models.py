@@ -22,8 +22,23 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save()
         return user
+class Laboratoire(models.Model):
+    id_laboratoire = models.AutoField(primary_key=True)
+    nom = models.CharField(max_length=255)
+    description = models.TextField()
+    # # Chercheur=models.ManyToManyField('Chercheur', related_name='Labo_chercheur')
+    # Partenaire=models.ManyToManyField(Partenaire_labo, related_name='Labo_partner')
 
-
+    def __str__(self):
+        return self.nom
+class Equipe_Recherche(models.Model):
+    id_equipe_recherche = models.AutoField(primary_key=True)
+    nom = models.CharField(max_length=255)
+    laboratoire = models.ForeignKey(Laboratoire, related_name="Equipe_recherche", on_delete=models.CASCADE, default=None)
+    theme=models.CharField(max_length=255, default='')
+    def __str__(self):
+        return self.nom
+    
 class Utilisateur(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=254, default="", unique=True)
     family_name = models.CharField(max_length=254, null=True, blank=True)
@@ -34,6 +49,14 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now=True)
     last_login = models.DateTimeField(null=True, blank=True)
+    is_chercheur=models.BooleanField(default=False)
+    is_adminstrateur=models.BooleanField(default=False)
+    is_editeur=models.BooleanField(default=False)
+    is_responsable_fablab=models.BooleanField(default=False)
+    is_directeur_relex=models.BooleanField(default=False)
+    equipeRecherche = models.ForeignKey(Equipe_Recherche, related_name='chercheurs', on_delete=models.CASCADE, null=True, blank=True)
+
+    contact = models.IntegerField(null=True, blank=True)
     objects = UserManager()  
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
@@ -67,6 +90,12 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
             return False
 
 
+# class ChercheurManager(models.Manager):
+#     def get_queryset(self,*arg,**kwargs):
+#         return super().get_queryset(*arg,**kwargs).filter(is_chercheur=True)
+
+
+
 
     
 
@@ -76,6 +105,8 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.nom'''
+
+
 
 class Publication(models.Model):
     id_publication = models.AutoField(primary_key=True)
@@ -90,6 +121,7 @@ class Publication(models.Model):
     #category = models.ForeignKey(Categorie, on_delete=models.CASCADE)#if category gets deleted all post gets deleted 
     #I don't think it should be a class by it's own if we won't change the class frequently
     category=models.CharField(max_length=50)
+
     def __str__(self):
         return self.titre
 
@@ -97,15 +129,6 @@ class Publication(models.Model):
 
 
 
-class Laboratoire(models.Model):
-    id_laboratoire = models.IntegerField(primary_key=True)
-    nom = models.CharField(max_length=255)
-    description = models.TextField()
-    # # Chercheur=models.ManyToManyField('Chercheur', related_name='Labo_chercheur')
-    # Partenaire=models.ManyToManyField(Partenaire_labo, related_name='Labo_partner')
-
-    def __str__(self):
-        return self.nom
 
 class Partenaire_labo(models.Model):
     nom = models.CharField(max_length=255)
@@ -117,26 +140,35 @@ class Partenaire_labo(models.Model):
     def __str__(self):
         return self.nom
 
-class Equipe_Recherche(models.Model):
-    id_equipe_recherche = models.IntegerField(primary_key=True)
-    nom = models.CharField(max_length=255)
-    laboratoire = models.ForeignKey(Laboratoire, related_name="Equipe_recherche", on_delete=models.CASCADE, default=None)
-    theme=models.CharField(max_length=255, default='')
-    def __str__(self):
-        return self.nom
 
+'''
 class Chercheur(Utilisateur):
     
     equipe = models.ForeignKey(Equipe_Recherche, related_name='chercheurs', on_delete=models.CASCADE, default=None)
     def __str__(self):
         return f"{self.family_name} {self.first_name}"
+'''
+# class Chercheur(Utilisateur):
+#     objects=ChercheurManager()
+    
+#     def save(self,*arg,**kwargs):
+#         if not self.pk:
+#             self.is_chercheur=True
+#         return super().save(*arg,**kwargs)            
 
+#     class Meta:
+#         proxy = True
 
+# class ChercheurEquipe(Chercheur):
+#     equipe = models.ForeignKey(Equipe_Recherche, related_name='chercheurs', on_delete=models.CASCADE, default=None)
+#     class Meta:
+#         verbose_name = 'Chercheur'
+#         verbose_name_plural = 'Chercheurs'
 
 class Equipe_Projet(models.Model):
-    id_equipe_projet = models.IntegerField(primary_key=True)
+    id_equipe_projet = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
-    Chercheur=models.ManyToManyField('Chercheur', related_name='equipe_projet')
+    Chercheur=models.ManyToManyField('Utilisateur', related_name='equipe_projet')
     laboratoire = models.ForeignKey(Laboratoire, related_name="Equipes_projet", on_delete=models.CASCADE, default=None)
   
     def __str__(self):

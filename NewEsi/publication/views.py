@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view , permission_classes
 from rest_framework.permissions import AllowAny
 from django.db.models import Q
+from .decorators import *
 @api_view(['GET'])
 def get_all_users(request):
     if request.method == 'GET':
@@ -20,10 +21,10 @@ def add_user(request):
     if request.method == 'POST':
         data = request.data.copy()  # Create a copy of the request data
         data.pop('id', None)  # Remove 'id' field if present
-        if isinstance(data, list):  # If data is an array
-            serializer = UtilisateurSerializer(data=data, many=True)
-        else:  # If data is a single object
-            serializer = UtilisateurSerializer(data=data)
+        # if isinstance(data, list):  # If data is an array
+        #     serializer = UtilisateurSerializer(data=data, many=True)
+        # else:  # If data is a single object
+        serializer = UtilisateurSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -122,17 +123,20 @@ def get_all_publications(request):
 
 # POST a new publication
 @api_view(['POST'])
+@user_types_required('editeur')
 def add_publication(request):
     if request.method == 'POST':
-        if isinstance(request.data, list):  # If data is an array
-            serializer = PublicationSerializer(data=request.data, many=True)
-        else:  # If data is a single object
-            serializer = PublicationSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Check if user is an editor
+            if isinstance(request.data, list):  # If data is an array
+                serializer = PublicationSerializer(data=request.data, many=True)
+            else:  # If data is a single object
+                serializer = PublicationSerializer(data=request.data)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['GET'])
 def search_publication(request):
     if request.method == 'GET':
@@ -173,7 +177,26 @@ def edit_publication(request, pk):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['PUT'])
+@user_types_required('adminstrateur')
+def validate_publication(request, pk):
+    try:
+        publication = Publication.objects.get(pk=pk)
 
+    except Publication.DoesNotExist:
+        return Response("Publication not found", status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        # Update the 'etat' attribute to 'valide'
+        publication.etat = 'valide'
+        # Save the changes to the publication object
+        publication.save()
+
+        # Serialize the updated publication object
+        serializer = PublicationSerializer(publication)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 # DELETE a publication by ID
 @api_view(['DELETE'])
 def delete_publication(request, pk):
@@ -344,11 +367,11 @@ def laboratoire_list(request):
 @api_view(['GET', 'POST'])
 def chercheur_list(request):
     if request.method == 'GET':
-        queryset = Chercheur.objects.all()
-        serializer = ChercheurSerializer(queryset, many=True)
+        queryset = Utilisateur.objects.filter(is_chercheur=True)
+        serializer = UtilisateurSerializer(queryset, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
-        serializer = ChercheurSerializer(data=request.data)
+        serializer = UtilisateurSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
@@ -356,18 +379,36 @@ def chercheur_list(request):
 
 
 
+# @api_view(['GET', 'POST'])
+# def equipe_projet_list(request):
+#     if request.method == 'GET':
+#         queryset = Equipe_Projet.objects.all()
+#         serializer = Equipe_ProjetSerializer(queryset, many=True)
+#         return Response(serializer.data)
+#     elif request.method == 'POST':
+#         serializer = Equipe_ProjetSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=201)
+#         return Response(serializer.errors, status=400)
+    
 @api_view(['GET', 'POST'])
 def equipe_projet_list(request):
     if request.method == 'GET':
-        queryset = Equipe_Projet.objects.all()
-        serializer = Equipe_ProjetSerializer(queryset, many=True)
-        return Response(serializer.data)
+        # Assuming you want to filter equipe by authenticated Chercheur
+        if request.user.is_authenticated and request.user.is_chercheur:
+            equipe = Equipe_Projet.objects.filter(Chercheur=request.user)
+            serializer = Equipe_ProjetSerializer(equipe, many=True)
+            return Response(serializer.data)
+        else:
+            return Response("You are not authorized to access this resource.", status=status.HTTP_403_FORBIDDEN)
     elif request.method == 'POST':
+        # You can add authorization logic here if required
         serializer = Equipe_ProjetSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
 @api_view(['GET', 'POST'])
 def equipe_recherche_list(request):

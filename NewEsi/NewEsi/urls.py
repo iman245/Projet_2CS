@@ -27,6 +27,7 @@ urlpatterns = [
     path('users/delete/<int:pk>/',delete_user,name='delete_user'),
     path('publication/', get_all_publications, name='get_all_publications'),
     path('publication/add/', add_publication, name='add_publication'),
+    path('publication/validate/<int:pk>/', validate_publication, name='validate_publication'),
     path('publication/<int:pk>/', edit_publication, name='edit_publication'),
     path('publication/search/',search_publication,name='search_publication'),
     path('publication/delete/<int:pk>/', delete_publication, name='delete_publication'),
