@@ -193,6 +193,7 @@ def delete_publication(request, pk):
 
 
 @api_view(['POST'])
+
 def add_partenaire(request):
    if request.method == 'POST':
         if isinstance(request.data, list):  # If data is an array
@@ -312,6 +313,137 @@ def get_all_devis(request):
         queryset = Devis.objects.all()
         serializer = DevisSerializer(queryset, many=True)
         return Response(serializer.data)
+
+@api_view(['GET', 'POST'])
+
+def partenaire_labo_list(request):
+    if request.method == 'GET':
+        queryset = Partenaire_labo.objects.all()
+        serializer = Partenaire_laboSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = Partenaire_laboSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['GET', 'POST'])
+def laboratoire_list(request):
+    if request.method == 'GET':
+        queryset = Laboratoire.objects.all()
+        serializer = LaboratoireSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = LaboratoireSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['GET', 'POST'])
+def chercheur_list(request):
+    if request.method == 'GET':
+        queryset = Chercheur.objects.all()
+        serializer = ChercheurSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ChercheurSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+
+@api_view(['GET', 'POST'])
+def equipe_projet_list(request):
+    if request.method == 'GET':
+        queryset = Equipe_Projet.objects.all()
+        serializer = Equipe_ProjetSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = Equipe_ProjetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['GET', 'POST'])
+def equipe_recherche_list(request):
+    if request.method == 'GET':
+        queryset = Equipe_Recherche.objects.all()
+        serializer = Equipe_RechercheSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = Equipe_RechercheSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['GET', 'POST'])
+def projet_list(request):
+    if request.method == 'GET':
+        queryset = Projet.objects.all()
+        serializer = ProjetSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ProjetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['GET', 'POST'])
+def theme_recherche_list(request):
+    if request.method == 'GET':
+        queryset = Theme_Recherche.objects.all()
+        serializer = Theme_RechercheSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = Theme_RechercheSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

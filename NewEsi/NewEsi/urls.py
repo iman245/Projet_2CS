@@ -40,5 +40,12 @@ urlpatterns = [
     path('Devis/valider',valider_devis,name='valider_devis'),
     path('Devis/demande',add_devis,name='add_devis'),
     path('Devis',get_all_devis,name='get_all_devis'),
-
+    path('chercheur',chercheur_list,name='chercheur'),
+    path('partenair_labo',partenaire_labo_list,name='partenaire_labo_list'),
+    path('labos',laboratoire_list,name='laboratoire_list'),
+    path('equipe_recherche',equipe_recherche_list,name='equipe_recherche_list'),
+    path('chercheur',chercheur_list,name='chercheur'),
+    path('equipe_projet',equipe_projet_list,name='equipe_projet'),
+    path('theme',theme_recherche_list,name='theme'),
+    path('project',projet_list,name='project'),
 ]

@@ -67,9 +67,8 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
             return False
 
 
-class Chercheur(Utilisateur):
-    #link to a lab
-    pass
+
+    
 
 '''class Categorie(models.Model):
     id_categorie = models.AutoField(primary_key=True)
@@ -94,36 +93,83 @@ class Publication(models.Model):
     def __str__(self):
         return self.titre
 
+#recherche
 
 
-class Equipe_Projet(models.Model):
-    id_equipe_projet = models.IntegerField(primary_key=True)
-    nom = models.CharField(max_length=255)
-    Chercheur=models.ManyToManyField('Chercheur', related_name='equipes_projet')
-    def __str__(self):
-        return self.nom
-    
-class Projet(models.Model):
-    id_projet = models.IntegerField(primary_key=True)
+
+class Laboratoire(models.Model):
+    id_laboratoire = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
     description = models.TextField()
-    equipe_projet = models.ForeignKey(Equipe_Projet, on_delete=models.CASCADE)
+    # # Chercheur=models.ManyToManyField('Chercheur', related_name='Labo_chercheur')
+    # Partenaire=models.ManyToManyField(Partenaire_labo, related_name='Labo_partner')
+
+    def __str__(self):
+        return self.nom
+
+class Partenaire_labo(models.Model):
+    nom = models.CharField(max_length=255)
+    description = models.TextField()
+    contact = models.IntegerField(null=True, blank=True)
+    email = models.EmailField(max_length=255)
+    laboratoire = models.ForeignKey(Laboratoire, null=True, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.nom
 
 class Equipe_Recherche(models.Model):
     id_equipe_recherche = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
-    
+    laboratoire = models.ForeignKey(Laboratoire, related_name="Equipe_recherche", on_delete=models.CASCADE, default=None)
+    theme=models.CharField(max_length=255, default='')
     def __str__(self):
         return self.nom
+
+class Chercheur(Utilisateur):
+    
+    equipe = models.ForeignKey(Equipe_Recherche, related_name='chercheurs', on_delete=models.CASCADE, default=None)
+    def __str__(self):
+        return f"{self.family_name} {self.first_name}"
+
+
+
+class Equipe_Projet(models.Model):
+    id_equipe_projet = models.IntegerField(primary_key=True)
+    nom = models.CharField(max_length=255)
+    Chercheur=models.ManyToManyField('Chercheur', related_name='equipe_projet')
+    laboratoire = models.ForeignKey(Laboratoire, related_name="Equipes_projet", on_delete=models.CASCADE, default=None)
+  
+    def __str__(self):
+        return self.nom
+    
 class Theme_Recherche(models.Model):
     id_theme = models.IntegerField(primary_key=True)
     nom = models.CharField(max_length=255)
     description = models.TextField()
-    Equipe_Recherche = models.ForeignKey(Equipe_Recherche, on_delete=models.CASCADE)
+    # projets=models.ManyToManyField(Projet,related_name= "themes")
+
     def __str__(self):
         return self.nom
+
+
+class Projet(models.Model):
+    id_projet = models.IntegerField(primary_key=True)
+    nom = models.CharField(max_length=255)
+    description = models.TextField()
+    equipe_projet = models.ForeignKey(Equipe_Projet, on_delete=models.CASCADE)
+    themes=models.ManyToManyField(Theme_Recherche,related_name= "themes")
+
+    def __str__(self):
+        return self.nom
+
+
+
+
+
+
+
+
+
 
         
 
@@ -159,14 +205,7 @@ class Formation(models.Model):
 
 
 
-class Laboratoire(models.Model):
-    id_laboratoire = models.IntegerField(primary_key=True)
-    nom = models.CharField(max_length=255)
-    description = models.TextField()
-    Chercheur=models.ManyToManyField('Chercheur', related_name='Labo_chercheur')
-    Partenaire=models.ManyToManyField('Partenaire', related_name='Labo_chercheur')
-    def __str__(self):
-        return self.nom
+
 
 class Partenaire(models.Model):
     nom = models.CharField(max_length=255)
