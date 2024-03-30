@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'publication',
+    'fablab',
     'rest_framework',
     'rest_framework.authtoken'
 ]

@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from publication.views import *
+from fablab.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', get_all_users, name='get_all_users'),  # URL for getting all users and creating new users
@@ -49,4 +50,18 @@ urlpatterns = [
     path('equipe_projet',equipe_projet_list,name='equipe_projet'),
     path('theme',theme_recherche_list,name='theme'),
     path('project',projet_list,name='project'),
+    path('club/<int:club_id>/', get_club_members, name='get_club_members'),
+    path('club/<int:club_id>/add_member/', add_club_member, name='add_club_member'),
+    path('club/<int:club_id>/update/', update_club, name='update_club'),
+    path('club/<int:club_id>/delete/', delete_club, name='delete_club'),
+    path('club/<int:club_id>/members/<int:member_id>/update/', update_member, name='update_member'),
+    path('club/<int:club_id>/members/<int:member_id>/delete/', delete_member, name='delete_member'),
+    path('club/<int:club_id>/members/<str:name>/', get_members_by_name, name='get_members_by_name'),
+    path('club/<str:name>/',get_clubs_by_name, name='get_clubs_by_name'),
+    path('club/<int:club_id>/evenement_publications/', get_club_evenement_publications, name='get_club_evenement_publications'),
+    path('club/<int:club_id>/add_evenement_publication/', add_evenement_publication_to_club, name='add_evenement_publication_to_club'),
+    path('material-requests/', get_all_material_requests, name='get_all_material_requests'),
+    path('material-request/<int:request_id>/', accept_or_reject_material_request, name='accept_or_reject_material_request'),
+    path('material-request/<int:request_id>/electrical-pieces/', get_electrical_pieces_for_material_request, name='get_electrical_pieces_for_material_request'),
+    path('material-request/<int:request_id>/add-electrical-piece/', add_electrical_piece_to_material_request, name='add_electrical_piece_to_material_request'),
 ]

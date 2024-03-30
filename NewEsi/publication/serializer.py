@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from .models import Utilisateur,Publication , Token ,  Partenaire , Demande_Partenariat, Devis, Partenaire_labo, Laboratoire, Equipe_Recherche, Equipe_Projet, Projet, Theme_Recherche
+from .models import Utilisateur,Publication , Token ,MembreClub,Club , Partenaire , Demande_Partenariat, Devis, Partenaire_labo, Laboratoire, Equipe_Recherche, Equipe_Projet, Projet, Theme_Recherche
 
 class UtilisateurSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,7 +11,14 @@ class PublicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publication
         fields = '__all__'
-
+class ClubSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Club
+        fields = '__all__'
+class MembreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MembreClub
+        fields = '__all__'  # Sérialiser tous les champs du modèle
 
 class tokenSerializer(serializers.ModelSerializer):
     class Meta:
@@ -79,3 +86,6 @@ class Theme_RechercheSerializer(serializers.ModelSerializer):
     class Meta:
         model = Theme_Recherche
         fields = ['id_theme', 'nom', 'description','themes']
+
+
+        

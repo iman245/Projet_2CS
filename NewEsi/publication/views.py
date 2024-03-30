@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from .models import Utilisateur, Publication
 from .serializer import *
 from rest_framework.views import APIView 
@@ -210,8 +210,135 @@ def delete_publication(request, pk):
         return Response("Publication deleted successfully", status=status.HTTP_204_NO_CONTENT)    
 
 
+#club
+# Get all members of a club
+@api_view(['GET'])
+def get_club_members(request, club_id):
+    if request.method == 'GET':
+        try:
+            club = Club.objects.get(id_club=club_id)
+        except Club.DoesNotExist:
+            return Response("Club not found", status=status.HTTP_404_NOT_FOUND)
+        
+        members = club.membres.all()
+        serializer = MembreSerializer(members, many=True)
+        return Response(serializer.data)
+
+# Add a member to a club
+@api_view(['POST'])
+def add_club_member(request, club_id):
+    if request.method == 'POST':
+        try:
+            club = Club.objects.get(id_club=club_id)
+        except Club.DoesNotExist:
+            return Response("Club not found", status=status.HTTP_404_NOT_FOUND)
+
+        serializer = MembreSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(club=club)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Get all clubs
+@api_view(['GET'])
+def get_all_clubs(request):
+    if request.method == 'GET':
+        clubs = Club.objects.all()
+        serializer = ClubSerializer(clubs, many=True)
+        return Response(serializer.data)
+
+# Create a new club
+@api_view(['POST'])
+def create_club(request):
+    if request.method == 'POST':
+        serializer = ClubSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
 
+# Update a Club
+@api_view(['PUT'])
+
+def update_club(request, club_id):
+    club = get_object_or_404(Club, id_club=club_id)
+    if request.method == 'PUT':
+        serializer = ClubSerializer(club, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Delete a Club
+@api_view(['DELETE'])
+
+def delete_club(request, club_id):
+    club = get_object_or_404(Club, id_club=club_id)
+    if request.method == 'DELETE':
+        club.delete()
+        return Response("Club deleted successfully", status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def get_club_evenement_publications(request, club_id):
+    club = get_object_or_404(Club, id_club=club_id)
+    if request.method == 'GET':
+        publications = club.publications.all()
+        serializer = PublicationSerializer(publications, many=True)
+        return Response(serializer.data)
+
+# Add a publication of type 'evenement' to a club
+@api_view(['POST'])
+
+def add_evenement_publication_to_club(request, club_id):
+    club = get_object_or_404(Club, id_club=club_id)
+    if request.method == 'POST':
+        data = request.data.copy()
+        data['club'] = club.id_club
+        serializer = PublicationSerializer(data=data)
+        if serializer.is_valid():
+            if serializer.validated_data['type_publication'] != 'evenement':
+                return Response("Publication type must be 'evenement'", status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Update a Member
+@api_view(['PUT'])
+
+def update_member(request, member_id):
+    member = get_object_or_404(MembreClub, id_membre=member_id)
+    if request.method == 'PUT':
+        serializer = MembreSerializer(member, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Delete a Member
+@api_view(['DELETE'])
+def delete_member(request, member_id):
+    member = get_object_or_404(MembreClub, id_membre=member_id)
+    if request.method == 'DELETE':
+        member.delete()
+        return Response("Member deleted successfully", status=status.HTTP_204_NO_CONTENT)
+
+# Get Members by Name
+@api_view(['GET'])
+def get_members_by_name(request, club_id, name):
+    if request.method == 'GET':
+        club = get_object_or_404(Club, id_club=club_id)
+        members = club.membres.filter(nom__icontains=name)
+        serializer = MembreSerializer(members, many=True)
+        return Response(serializer.data)
+
+# Get Clubs by Name
+@api_view(['GET'])
+def get_clubs_by_name(request, name):
+    if request.method == 'GET':
+        clubs = Club.objects.filter(nom__icontains=name)
+        serializer = ClubSerializer(clubs, many=True)
+        return Response(serializer.data)
 
 
 

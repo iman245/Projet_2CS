@@ -107,7 +107,30 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
         return self.nom'''
 
 
+#club
 
+
+class Club(models.Model):
+    id_club=models.AutoField(primary_key=True)    
+    nom = models.CharField(max_length=255)
+    slogan= models.CharField(max_length=255)
+    description= models.TextField()
+    logo=models.ImageField(upload_to='club/', null=True, blank=True)
+    def __str__(self):
+        return self.nom
+    
+
+class MembreClub(models.Model):
+    id_membre=models.AutoField(primary_key=True)    
+    nom = models.CharField(max_length=255)
+    prenom= models.CharField(max_length=255)
+    post= models.TextField()
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='membres')
+
+    def __str__(self):
+        return self.nom     
+    
+#publications    
 class Publication(models.Model):
     id_publication = models.AutoField(primary_key=True)
     titre = models.CharField(max_length=255)
@@ -121,6 +144,7 @@ class Publication(models.Model):
     #category = models.ForeignKey(Categorie, on_delete=models.CASCADE)#if category gets deleted all post gets deleted 
     #I don't think it should be a class by it's own if we won't change the class frequently
     category=models.CharField(max_length=50)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='publications',null=True)
 
     def __str__(self):
         return self.titre
@@ -247,3 +271,6 @@ class Partenaire(models.Model):
     
     def __str__(self):
         return self.nom
+    
+
+
