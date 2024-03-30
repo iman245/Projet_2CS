@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import *
+from fablab.models import *
 class DemandeMaterielSerializer(serializers.ModelSerializer):
     class Meta:
         model = DemandeMateriel
@@ -10,3 +10,8 @@ class PieceElectSerializer(serializers.ModelSerializer):
         model = PieceElect
         fields ='__all__'
 
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields ='__all__'

@@ -64,4 +64,7 @@ urlpatterns = [
     path('material-request/<int:request_id>/', accept_or_reject_material_request, name='accept_or_reject_material_request'),
     path('material-request/<int:request_id>/electrical-pieces/', get_electrical_pieces_for_material_request, name='get_electrical_pieces_for_material_request'),
     path('material-request/<int:request_id>/add-electrical-piece/', add_electrical_piece_to_material_request, name='add_electrical_piece_to_material_request'),
+    path('categories/', get_all_categories_fablab, name='get_all_categories_fablab'),
+    path('category/<int:category_id>/pieces/', get_pieces_for_category_fablab, name='get_pieces_for_category_fablab'),
+    path('category/<int:category_id>/add-piece/', add_piece_to_category_fablab, name='add_piece_to_category_fablab'),
 ]

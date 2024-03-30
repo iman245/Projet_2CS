@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import DemandeMateriel, PieceElect
-from .serializers import DemandeMaterielSerializer, PieceElectSerializer
+from .models import DemandeMateriel, PieceElect,Category
+from .serializers import DemandeMaterielSerializer, PieceElectSerializer,CategorySerializer
 from publication.decorators import user_types_required
 
 # Get all material requests
@@ -45,6 +45,35 @@ def add_electrical_piece_to_material_request(request, request_id):
     if request.method == 'POST':
         data = request.data.copy()
         data['demande_materiel'] = request_instance.id_demandeur
+        serializer = PieceElectSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# Get all categories
+@api_view(['GET'])
+def get_all_categories_fablab(request):
+    if request.method == 'GET':
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
+
+# Get all pieces of electrical equipment for a category
+@api_view(['GET'])
+def get_pieces_for_category_fablab(request, category_id):
+    category_instance = get_object_or_404(Category, id_category=category_id)
+    if request.method == 'GET':
+        pieces = PieceElect.objects.filter(category=category_instance)
+        serializer = PieceElectSerializer(pieces, many=True)
+        return Response(serializer.data)
+
+# Add a piece of electrical equipment to a category
+@api_view(['POST'])
+def add_piece_to_category_fablab(request, category_id):
+    category_instance = get_object_or_404(Category, id_category=category_id)
+    if request.method == 'POST':
+        data = request.data.copy()
+        data['category'] = category_instance.id_category
         serializer = PieceElectSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
