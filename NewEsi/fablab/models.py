@@ -16,7 +16,7 @@ class DemandeMateriel(models.Model):
     id_demandeur=models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     prenom = models.TextField()
-    Role = models.IntegerField(null=True, blank=True)
+    Role = models.CharField(max_length=255,null=True, blank=True)
     etat = models.CharField(max_length=50)  # valide, en attente, rejeté
     responsable_fablab = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='material_requests')
 
@@ -28,7 +28,7 @@ class PieceElect(models.Model):
     id_demandeur=models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     prenom = models.TextField()
-    Role = models.IntegerField(null=True, blank=True)
+    Role = models.CharField(max_length=255,null=True, blank=True)
     etat = models.CharField(max_length=50)  # valide, en attente, rejeté    
     demande_materiel = models.ForeignKey(DemandeMateriel, on_delete=models.CASCADE, related_name='electrical_pieces')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='pieces_elect',default=1)
