@@ -29,6 +29,7 @@ urlpatterns = [
     path('publication/', get_all_publications, name='get_all_publications'),
     path('publication/add/', add_publication, name='add_publication'),
     path('publication/validate/<int:pk>/', validate_publication, name='validate_publication'),
+    path('publication/refuse/<int:pk>/', refuse_publication, name='validate_publication'),
     path('publication/<int:pk>/', edit_publication, name='edit_publication'),
     path('publication/search/',search_publication,name='search_publication'),
     path('publication/delete/<int:pk>/', delete_publication, name='delete_publication'),
@@ -61,4 +62,13 @@ urlpatterns = [
     path('club/<int:club_id>/evenement_publications/', get_club_evenement_publications, name='get_club_evenement_publications'),
     path('club/<int:club_id>/add_evenement_publication/', add_evenement_publication_to_club, name='add_evenement_publication_to_club'),
     path('', include('AppFablab.urls')),
+    path('annuaire/', get_all_annuaire , name='get_all_directory_entries'),
+    path('annuaire/add/',add_annuaire, name='add_directory_entry'),
+    path('annuaire/<int:pk>/', get_Annuaire, name='get_directory_entry'),
+    path('annuaire/edit/<int:pk>/', edit_Annuaire, name='edit_directory_entry'),
+    path('annuaire/delete/<int:pk>/', delete_Annuaire, name='delete_directory_entry'),
+    path('annuaire/enseignant/filter/', filter_enseignant_by_grade_and_mot_cle, name='filter_enseignant'),
+    path('annuaire/administration/filter/', filter_administration_by_mot_cle_and_service, name='filter_administration'),
+    path('annuaire/alumnie/filter/', filter_alumnie_by_promotion, name='filter_alumnie'),
 ]
+

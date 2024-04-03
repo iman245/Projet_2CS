@@ -197,6 +197,27 @@ def validate_publication(request, pk):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['PUT'])
+@user_types_required('adminstrateur')
+def refuse_publication(request, pk):
+    try:
+        publication = Publication.objects.get(pk=pk)
+    except Publication.DoesNotExist:
+        return Response("Publication not found", status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        publication.etat = 'refuse'
+        publication.save()
+        serializer = PublicationSerializer(publication)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
+
 # DELETE a publication by ID
 @api_view(['DELETE'])
 def delete_publication(request, pk):
@@ -579,16 +600,112 @@ def theme_recherche_list(request):
 
 
 
+@api_view(['POST'])
+def add_annuaire(request):
+    if request.method == 'POST':
+        category = request.data.get('category')
+        if category == 'admin':
+            serializer = AdministrationAnnuaireSerializer(data=request.data)
+        elif category == 'enseignant':
+            serializer = EnseignantAnnuaireSerializer(data=request.data)
+        elif category == 'alumnie':
+            serializer = AlumnieAnnuaireSerializer(data=request.data)
+        else:
+            return Response("Invalid category", status=status.HTTP_400_BAD_REQUEST)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET'])
+def get_all_annuaire(request):
+    annuaires = Annuaire.objects.all()
+    serializer = AnnuaireSerializer(annuaires, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_Annuaire(request, pk):
+    try:
+        entry = Annuaire.objects.get(pk=pk)
+        serializer = AnnuaireSerializer(entry)
+        return Response(serializer.data)
+    except Annuaire.DoesNotExist:
+        return Response("Entry not found", status=status.HTTP_404_NOT_FOUND)
 
 
 
 
 
+@api_view(['PUT'])
+def edit_Annuaire(request, pk):
+    try:
+        entry = Annuaire.objects.get(pk=pk)
+        if request.method == 'PUT':
+            serializer = AnnuaireSerializer(entry, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Annuaire.DoesNotExist:
+        return Response("Entry not found", status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE'])
+def delete_Annuaire(request, pk):
+    try:
+        entry = Annuaire.objects.get(pk=pk)
+        if request.method == 'DELETE':
+            entry.delete()
+            return Response("Entry deleted successfully", status=status.HTTP_204_NO_CONTENT)
+    except Annuaire.DoesNotExist:
+        return Response("Entry not found", status=status.HTTP_404_NOT_FOUND)
 
 
 
+@api_view(['GET'])
+def filter_enseignant_by_grade_and_mot_cle(request):
+    grade = request.query_params.get('grade')
+    mot_cle = request.query_params.get('mot_cle')
+    if grade and mot_cle:
+        enseignants = Enseignant_Annuaire.objects.filter(grade=grade, mot_cle__icontains=mot_cle)
+    elif grade:
+        enseignants = Enseignant_Annuaire.objects.filter(grade=grade)
+    elif mot_cle:
+        enseignants = Enseignant_Annuaire.objects.filter(mot_cle__icontains=mot_cle)
+    else:
+        enseignants = Enseignant_Annuaire.objects.all()  
+    serializer = EnseignantAnnuaireSerializer(enseignants, many=True)
+    return Response(serializer.data)
 
 
+@api_view(['GET'])
+def filter_administration_by_mot_cle_and_service(request):
+    service= request.query_params.get('service')
+    mot_cle = request.query_params.get('mot_cle')
+    if service and mot_cle:
+        enseignants = Administration_Annuaire.objects.filter(service=service, mot_cle__icontains=mot_cle)
+    elif service :
+        enseignants = Administration_Annuaire.objects.filter(service=service)
+    elif mot_cle:
+        enseignants = Administration_Annuaire.objects.filter(mot_cle__icontains=mot_cle)
+    else:
+        enseignants = Administration_Annuaire.objects.all()  
+    serializer = AdministrationAnnuaireSerializer(enseignants, many=True)
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+def filter_alumnie_by_promotion(request):
+    promotion = request.query_params.get('promotion')
+    alumnie = Alumnie_Annuaire.objects.all()
+    if promotion:
+        alumnie = alumnie.filter(promotion=promotion)
+    serializer = AlumnieAnnuaireSerializer(alumnie, many=True)
+    return Response(serializer.data)
 
 
 

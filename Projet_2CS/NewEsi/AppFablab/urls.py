@@ -24,5 +24,5 @@ urlpatterns = [
     path('piece/<int:piece_id>/', piece_info, name='piece_info'),
     path('filter-inscriptions-by-date/', filter_inscriptions_by_date, name='filter_inscriptions_by_date'),
     path('filter-demandes-by-date/', filter_demandes_by_date, name='filter_demandes_by_date'),
-   
+
 ]   
