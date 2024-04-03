@@ -686,29 +686,51 @@ def filter_administration_by_mot_cle_and_service(request):
     service= request.query_params.get('service')
     mot_cle = request.query_params.get('mot_cle')
     if service and mot_cle:
-        enseignants = Administration_Annuaire.objects.filter(service=service, mot_cle__icontains=mot_cle)
+        admin = Administration_Annuaire.objects.filter(service=service, mot_cle__icontains=mot_cle)
     elif service :
-        enseignants = Administration_Annuaire.objects.filter(service=service)
+        admin = Administration_Annuaire.objects.filter(service=service)
     elif mot_cle:
-        enseignants = Administration_Annuaire.objects.filter(mot_cle__icontains=mot_cle)
+        admin = Administration_Annuaire.objects.filter(mot_cle__icontains=mot_cle)
     else:
-        enseignants = Administration_Annuaire.objects.all()  
-    serializer = AdministrationAnnuaireSerializer(enseignants, many=True)
+        admin = Administration_Annuaire.objects.all()  
+    serializer = AdministrationAnnuaireSerializer(admin, many=True)
     return Response(serializer.data)
 
 
 
 @api_view(['GET'])
 def filter_alumnie_by_promotion(request):
-    promotion = request.query_params.get('promotion')
-    alumnie = Alumnie_Annuaire.objects.all()
-    if promotion:
-        alumnie = alumnie.filter(promotion=promotion)
-    serializer = AlumnieAnnuaireSerializer(alumnie, many=True)
+    promotion= request.query_params.get('promotion')
+    mot_cle = request.query_params.get('mot_cle')
+    if promotion and mot_cle:
+        Alumnie = Alumnie_Annuaire.objects.filter(promotion=promotion, mot_cle__icontains=mot_cle)
+    elif promotion :
+        Alumnie = Alumnie_Annuaire.objects.filter(promotion=promotion)
+    elif mot_cle:
+        Alumnie = Alumnie_Annuaire.objects.filter(mot_cle__icontains=mot_cle)
+    else:
+        Alumnie= Alumnie_Annuaire.objects.all()  
+    serializer = AlumnieAnnuaireSerializer(Alumnie, many=True)
     return Response(serializer.data)
 
 
 
+@api_view(['GET'])
+def get_all_grades(request):
+    grades_set = set(choice[1] for choice in Enseignant_Annuaire.GRADE_CHOICES)
+    grades_list = list(grades_set)
+    return Response({'grades': grades_list})
+
+
+@api_view(['GET'])
+def get_all_promotions(request):
+    promotions = Alumnie_Annuaire.objects.values_list('promotion', flat=True).distinct()
+    return Response({'promotions': promotions})
+
+@api_view(['GET'])
+def get_all_services(request):
+    services = Administration_Annuaire.objects.values_list('service', flat=True).distinct()
+    return Response({'services': services})
 
 
 

@@ -283,13 +283,13 @@ class Annuaire(models.Model):
     email = models.EmailField(max_length=255)
     photo = models.ImageField(upload_to='annuaire_photos/', null=True, blank=True)
     linkedin = models.URLField(max_length=200, blank=True, null=True)
+    mot_cle = models.CharField(max_length=100, blank=True, null=True)
     
     def __str__(self):
         return f"{self.nom} {self.prenom}"
 
 class Administration_Annuaire(Annuaire):
     CATEGORY = 'admin'
-    mot_cle = models.CharField(max_length=100, blank=True, null=True)
     service = models.CharField(max_length=100, blank=True)
 
 class Enseignant_Annuaire(Annuaire):

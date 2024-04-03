@@ -70,5 +70,8 @@ urlpatterns = [
     path('annuaire/enseignant/filter/', filter_enseignant_by_grade_and_mot_cle, name='filter_enseignant'),
     path('annuaire/administration/filter/', filter_administration_by_mot_cle_and_service, name='filter_administration'),
     path('annuaire/alumnie/filter/', filter_alumnie_by_promotion, name='filter_alumnie'),
+    path('annuaire/grades/', get_all_grades, name='get_all_grades'),
+    path('annuaire/promotions/', get_all_promotions, name='get_all_promotions'),
+    path('annuaire/services/', get_all_services, name='get_all_services'),
 ]
 
