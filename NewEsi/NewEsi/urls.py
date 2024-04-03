@@ -15,8 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from publication.views import *
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', get_all_users, name='get_all_users'),  # URL for getting all users and creating new users
@@ -27,6 +28,7 @@ urlpatterns = [
     path('users/delete/<int:pk>/',delete_user,name='delete_user'),
     path('publication/', get_all_publications, name='get_all_publications'),
     path('publication/add/', add_publication, name='add_publication'),
+    path('publication/validate/<int:pk>/', validate_publication, name='validate_publication'),
     path('publication/<int:pk>/', edit_publication, name='edit_publication'),
     path('publication/search/',search_publication,name='search_publication'),
     path('publication/delete/<int:pk>/', delete_publication, name='delete_publication'),
@@ -40,5 +42,23 @@ urlpatterns = [
     path('Devis/valider',valider_devis,name='valider_devis'),
     path('Devis/demande',add_devis,name='add_devis'),
     path('Devis',get_all_devis,name='get_all_devis'),
-
+    path('chercheur',chercheur_list,name='chercheur'),
+    path('partenair_labo',partenaire_labo_list,name='partenaire_labo_list'),
+    path('labos',laboratoire_list,name='laboratoire_list'),
+    path('equipe_recherche',equipe_recherche_list,name='equipe_recherche_list'),
+    path('chercheur',chercheur_list,name='chercheur'),
+    path('equipe_projet',equipe_projet_list,name='equipe_projet'),
+    path('theme',theme_recherche_list,name='theme'),
+    path('project',projet_list,name='project'),
+    path('club/<int:club_id>/', get_club_members, name='get_club_members'),
+    path('club/<int:club_id>/add_member/', add_club_member, name='add_club_member'),
+    path('club/<int:club_id>/update/', update_club, name='update_club'),
+    path('club/<int:club_id>/delete/', delete_club, name='delete_club'),
+    path('club/<int:club_id>/members/<int:member_id>/update/', update_member, name='update_member'),
+    path('club/<int:club_id>/members/<int:member_id>/delete/', delete_member, name='delete_member'),
+    path('club/<int:club_id>/members/<str:name>/', get_members_by_name, name='get_members_by_name'),
+    path('club/<str:name>/',get_clubs_by_name, name='get_clubs_by_name'),
+    path('club/<int:club_id>/evenement_publications/', get_club_evenement_publications, name='get_club_evenement_publications'),
+    path('club/<int:club_id>/add_evenement_publication/', add_evenement_publication_to_club, name='add_evenement_publication_to_club'),
+    path('', include('AppFablab.urls')),
 ]

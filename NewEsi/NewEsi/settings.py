@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'publication',
+    'AppFablab',
     'rest_framework',
     'rest_framework.authtoken'
 ]
@@ -134,3 +135,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'publication.Utilisateur'
+<<<<<<< HEAD:NewEsi/NewEsi/settings.py
+=======
+
+
+# Emailing settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM = 'kr_ghlib@esi.dz'
+EMAIL_HOST_USER = 'kr_ghlib@esi.dz'
+EMAIL_HOST_PASSWORD = 'adaprzeohbjswlve'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+ADMIN_EMAIL='kr_ghlib@esi.dz'
+>>>>>>> 3a64b428f0dbd05d084a9b732981234511ade869:Projet_2CS/NewEsi/NewEsi/settings.py

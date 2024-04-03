@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from .models import Utilisateur, Publication
 from .serializer import *
 from rest_framework.views import APIView 
@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view , permission_classes
 from rest_framework.permissions import AllowAny
 from django.db.models import Q
+from .decorators import *
 @api_view(['GET'])
 def get_all_users(request):
     if request.method == 'GET':
@@ -20,10 +21,10 @@ def add_user(request):
     if request.method == 'POST':
         data = request.data.copy()  # Create a copy of the request data
         data.pop('id', None)  # Remove 'id' field if present
-        if isinstance(data, list):  # If data is an array
-            serializer = UtilisateurSerializer(data=data, many=True)
-        else:  # If data is a single object
-            serializer = UtilisateurSerializer(data=data)
+        # if isinstance(data, list):  # If data is an array
+        #     serializer = UtilisateurSerializer(data=data, many=True)
+        # else:  # If data is a single object
+        serializer = UtilisateurSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -122,17 +123,20 @@ def get_all_publications(request):
 
 # POST a new publication
 @api_view(['POST'])
+@user_types_required('editeur')
 def add_publication(request):
     if request.method == 'POST':
-        if isinstance(request.data, list):  # If data is an array
-            serializer = PublicationSerializer(data=request.data, many=True)
-        else:  # If data is a single object
-            serializer = PublicationSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Check if user is an editor
+            if isinstance(request.data, list):  # If data is an array
+                serializer = PublicationSerializer(data=request.data, many=True)
+            else:  # If data is a single object
+                serializer = PublicationSerializer(data=request.data)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['GET'])
 def search_publication(request):
     if request.method == 'GET':
@@ -173,7 +177,26 @@ def edit_publication(request, pk):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['PUT'])
+@user_types_required('adminstrateur')
+def validate_publication(request, pk):
+    try:
+        publication = Publication.objects.get(pk=pk)
 
+    except Publication.DoesNotExist:
+        return Response("Publication not found", status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        # Update the 'etat' attribute to 'valide'
+        publication.etat = 'valide'
+        # Save the changes to the publication object
+        publication.save()
+
+        # Serialize the updated publication object
+        serializer = PublicationSerializer(publication)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 # DELETE a publication by ID
 @api_view(['DELETE'])
 def delete_publication(request, pk):
@@ -187,12 +210,140 @@ def delete_publication(request, pk):
         return Response("Publication deleted successfully", status=status.HTTP_204_NO_CONTENT)    
 
 
+#club
+# Get all members of a club
+@api_view(['GET'])
+def get_club_members(request, club_id):
+    if request.method == 'GET':
+        try:
+            club = Club.objects.get(id_club=club_id)
+        except Club.DoesNotExist:
+            return Response("Club not found", status=status.HTTP_404_NOT_FOUND)
+        
+        members = club.membres.all()
+        serializer = MembreSerializer(members, many=True)
+        return Response(serializer.data)
+
+# Add a member to a club
+@api_view(['POST'])
+def add_club_member(request, club_id):
+    if request.method == 'POST':
+        try:
+            club = Club.objects.get(id_club=club_id)
+        except Club.DoesNotExist:
+            return Response("Club not found", status=status.HTTP_404_NOT_FOUND)
+
+        serializer = MembreSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(club=club)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Get all clubs
+@api_view(['GET'])
+def get_all_clubs(request):
+    if request.method == 'GET':
+        clubs = Club.objects.all()
+        serializer = ClubSerializer(clubs, many=True)
+        return Response(serializer.data)
+
+# Create a new club
+@api_view(['POST'])
+def create_club(request):
+    if request.method == 'POST':
+        serializer = ClubSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
 
+# Update a Club
+@api_view(['PUT'])
+
+def update_club(request, club_id):
+    club = get_object_or_404(Club, id_club=club_id)
+    if request.method == 'PUT':
+        serializer = ClubSerializer(club, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Delete a Club
+@api_view(['DELETE'])
+
+def delete_club(request, club_id):
+    club = get_object_or_404(Club, id_club=club_id)
+    if request.method == 'DELETE':
+        club.delete()
+        return Response("Club deleted successfully", status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def get_club_evenement_publications(request, club_id):
+    club = get_object_or_404(Club, id_club=club_id)
+    if request.method == 'GET':
+        publications = club.publications.all()
+        serializer = PublicationSerializer(publications, many=True)
+        return Response(serializer.data)
+
+# Add a publication of type 'evenement' to a club
+@api_view(['POST'])
+
+def add_evenement_publication_to_club(request, club_id):
+    club = get_object_or_404(Club, id_club=club_id)
+    if request.method == 'POST':
+        data = request.data.copy()
+        data['club'] = club.id_club
+        serializer = PublicationSerializer(data=data)
+        if serializer.is_valid():
+            if serializer.validated_data['type_publication'] != 'evenement':
+                return Response("Publication type must be 'evenement'", status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Update a Member
+@api_view(['PUT'])
+
+def update_member(request, member_id):
+    member = get_object_or_404(MembreClub, id_membre=member_id)
+    if request.method == 'PUT':
+        serializer = MembreSerializer(member, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Delete a Member
+@api_view(['DELETE'])
+def delete_member(request, member_id):
+    member = get_object_or_404(MembreClub, id_membre=member_id)
+    if request.method == 'DELETE':
+        member.delete()
+        return Response("Member deleted successfully", status=status.HTTP_204_NO_CONTENT)
+
+# Get Members by Name
+@api_view(['GET'])
+def get_members_by_name(request, club_id, name):
+    if request.method == 'GET':
+        club = get_object_or_404(Club, id_club=club_id)
+        members = club.membres.filter(nom__icontains=name)
+        serializer = MembreSerializer(members, many=True)
+        return Response(serializer.data)
+
+# Get Clubs by Name
+@api_view(['GET'])
+def get_clubs_by_name(request, name):
+    if request.method == 'GET':
+        clubs = Club.objects.filter(nom__icontains=name)
+        serializer = ClubSerializer(clubs, many=True)
+        return Response(serializer.data)
 
 
 
 @api_view(['POST'])
+
 def add_partenaire(request):
    if request.method == 'POST':
         if isinstance(request.data, list):  # If data is an array
@@ -312,6 +463,155 @@ def get_all_devis(request):
         queryset = Devis.objects.all()
         serializer = DevisSerializer(queryset, many=True)
         return Response(serializer.data)
+
+@api_view(['GET', 'POST'])
+
+def partenaire_labo_list(request):
+    if request.method == 'GET':
+        queryset = Partenaire_labo.objects.all()
+        serializer = Partenaire_laboSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = Partenaire_laboSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['GET', 'POST'])
+def laboratoire_list(request):
+    if request.method == 'GET':
+        queryset = Laboratoire.objects.all()
+        serializer = LaboratoireSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = LaboratoireSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['GET', 'POST'])
+def chercheur_list(request):
+    if request.method == 'GET':
+        queryset = Utilisateur.objects.filter(is_chercheur=True)
+        serializer = UtilisateurSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = UtilisateurSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+
+# @api_view(['GET', 'POST'])
+# def equipe_projet_list(request):
+#     if request.method == 'GET':
+#         queryset = Equipe_Projet.objects.all()
+#         serializer = Equipe_ProjetSerializer(queryset, many=True)
+#         return Response(serializer.data)
+#     elif request.method == 'POST':
+#         serializer = Equipe_ProjetSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=201)
+#         return Response(serializer.errors, status=400)
+    
+@api_view(['GET', 'POST'])
+def equipe_projet_list(request):
+    if request.method == 'GET':
+        # Assuming you want to filter equipe by authenticated Chercheur
+        if request.user.is_authenticated and request.user.is_chercheur:
+            equipe = Equipe_Projet.objects.filter(Chercheur=request.user)
+            serializer = Equipe_ProjetSerializer(equipe, many=True)
+            return Response(serializer.data)
+        else:
+            return Response("You are not authorized to access this resource.", status=status.HTTP_403_FORBIDDEN)
+    elif request.method == 'POST':
+        # You can add authorization logic here if required
+        serializer = Equipe_ProjetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+
+@api_view(['GET', 'POST'])
+def equipe_recherche_list(request):
+    if request.method == 'GET':
+        queryset = Equipe_Recherche.objects.all()
+        serializer = Equipe_RechercheSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = Equipe_RechercheSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['GET', 'POST'])
+def projet_list(request):
+    if request.method == 'GET':
+        queryset = Projet.objects.all()
+        serializer = ProjetSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ProjetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+@api_view(['GET', 'POST'])
+def theme_recherche_list(request):
+    if request.method == 'GET':
+        queryset = Theme_Recherche.objects.all()
+        serializer = Theme_RechercheSerializer(queryset, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = Theme_RechercheSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

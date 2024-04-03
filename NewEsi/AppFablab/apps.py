@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class FablabConfig(AppConfig):
+class AppfablabConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'fablab'
+    name = 'AppFablab'
