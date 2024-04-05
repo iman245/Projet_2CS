@@ -579,14 +579,41 @@ def theme_recherche_list(request):
 
 
 
+@api_view(['POST'])
+def PoserQuestion( request):
+     serializer = QuestionSerializer(data=request.data)
+     if serializer.is_valid():
+            serializer.save(auteur=request.user)  
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view([ 'POST'])
+@user_types_required('adminstrateur')
+def RepondreQuestion( request, question_id):
+        question = Question.objects.get(pk=question_id)
+        serializer = ReponseSerializer(data=request.data)
+        if serializer.is_valid():
+           serializer.save( question=question)
+           return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
-
-
-
+@api_view([ 'GET'])
+def GetQuestions(request, category):
+     questions = Question.objects.filter(category=category)
+     data = []
+     for question in questions:
+        reponses = Reponse.objects.filter(question=question)
+        reponses_data = []
+        for reponse in reponses:
+            reponses_data.append({
+                'reponse_texte': reponse.contenu,
+            })
+        data.append({
+            'question': question.contenu,
+            'reponses': reponses_data
+        })
+     return Response(data)
 
 
 

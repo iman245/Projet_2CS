@@ -61,4 +61,8 @@ urlpatterns = [
     path('club/<int:club_id>/evenement_publications/', get_club_evenement_publications, name='get_club_evenement_publications'),
     path('club/<int:club_id>/add_evenement_publication/', add_evenement_publication_to_club, name='add_evenement_publication_to_club'),
     path('', include('AppFablab.urls')),
+        path('poser-question/', PoserQuestion, name='poser_question'),
+    path('repondre-question/<int:question_id>/', RepondreQuestion, name='repondre_question'),
+    path('questions/<str:category>', GetQuestions, name='GetQuestions'),
+
 ]
