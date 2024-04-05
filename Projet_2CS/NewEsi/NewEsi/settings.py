@@ -135,6 +135,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'publication.Utilisateur'
+<<<<<<< HEAD:Projet_2CS/NewEsi/NewEsi/settings.py
 
 
 # Emailing settings
@@ -146,3 +147,5 @@ EMAIL_HOST_PASSWORD = 'adaprzeohbjswlve'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 ADMIN_EMAIL='kr_ghlib@esi.dz'
+=======
+>>>>>>> 1c4a4634330f8b7330d7944b13131561ebbc1c90:NewEsi/NewEsi/settings.py
