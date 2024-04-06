@@ -1,10 +1,20 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo,useEffect } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import countryList from 'react-select-country-list';
 import styles from './index.module.scss';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
+
+
+function ScrollToTop() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return null;
+}
+
 
 function DemandePartenariat(props) {
 
@@ -38,6 +48,7 @@ function DemandePartenariat(props) {
 
   return (
     <div className={cn(styles.root, props.className, 'demande-partenariat')}>
+      <ScrollToTop />
       <div className={styles.rect1} />
       <div className={styles.rectBlanc} />
       <img className={styles.image} src={'/assets/fa6ac9119371246826f9dcc1db7c7c0c.png'} alt="alt text" />

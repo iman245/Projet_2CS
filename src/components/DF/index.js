@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import PropTypes from "prop-types";
 import cn from "classnames";
 import StarRatingComponent from "react-star-rating-component";
+import { Link} from 'react-router-dom';
 
 import styles from "./index.module.scss";
+
+
+function ScrollToTop() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return null;
+}
+
 
 function DF(props) {
   const [rating, setRating] = useState(1); // Initial rating state
@@ -15,6 +26,7 @@ function DF(props) {
 
   return (
     <div className={cn(styles.root, props.className, "details-formation")}>
+      <ScrollToTop />
       <div className={styles.rect1}>
         <div className={styles.detailsContainer}>
           <h3 className={styles.subtitle}>
@@ -270,9 +282,11 @@ function DF(props) {
 
           <div className={styles.text5}>A propos des prix</div>
           <div className={styles.text3}>Essayer notre simulateur de devis </div>
+          <Link to="/DemandeDevis">
           <button className={styles.simulButton}>
             <span className={styles.text6}>Simuler</span>
           </button>
+          </Link>
 
 
 

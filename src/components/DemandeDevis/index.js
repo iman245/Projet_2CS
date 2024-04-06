@@ -1,10 +1,17 @@
-import React , { useState }from 'react';
+import React , { useState,useEffect }from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import styles from './index.module.scss';
+import {  Link } from 'react-router-dom';
 
 
+function ScrollToTop() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
+  return null;
+}
 
 function DemandeDevis(props) {
 
@@ -58,7 +65,7 @@ function DemandeDevis(props) {
 
   return (
     <div className={cn(styles.root, props.className, 'demande-devis')}>
-
+      <ScrollToTop />
       <div className={styles.rect1} />
       <div className={styles.description_container}>
       <h2 className={styles.medium_title_box}>
@@ -98,10 +105,12 @@ function DemandeDevis(props) {
       />
       <div className={styles.line} />
 
+      <Link to="/DemandeEnregistree">
       <button className={styles.valider} onClick={handleValider}>
       <img className={styles.cover} src={'/assets/solid_blue_background.png'} alt="alt text" />
       <h3 className={styles.subtitle}>Valider</h3>
        </button>
+      </Link>
 
       <input
       type="text"

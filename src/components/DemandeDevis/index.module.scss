@@ -15,6 +15,11 @@
   text-align: center;
 }
 
+.medium_title_span02 {
+  color: rgb(65, 176, 21);
+  font: 800 1.2em/1.5 "Poppins", Helvetica, Arial, serif;
+}
+
 .medium_title_span0 {
   color: rgb(255, 255, 255);
   font: 800 1em/1.5 "Poppins", Helvetica, Arial, serif;
@@ -48,6 +53,8 @@
   top: 146px;
   width: 55%; 
 }
+
+
 .description_container{
   width: 100%;
   display: flex;
@@ -109,6 +116,29 @@
   right: 122px;
   top: 393px;
   width: 780px;
+}
+
+.rect2Enreg {
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px 5px 5px 5px;
+  bottom: 538px;
+  box-shadow: 0px 7px 29px 0px rgba(100, 100, 111, 0.2);
+  height: 400px;
+  left: 122px;
+  position: absolute;
+  right: 122px;
+  top: 210px;
+  width: 780px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.medium_title_box2 {
+  text-align: center;
+  height: 36px;
+  width: 55%; 
+  position: absolute;
+  top: 150px
 }
 .text {
   bottom: 1008px;
