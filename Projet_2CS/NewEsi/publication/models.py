@@ -275,6 +275,27 @@ class Partenaire(models.Model):
 
 
 
+
+
+#forum
+class Question(models.Model):
+    category=models.CharField(max_length=50)
+    auteur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE)
+    titre = models.CharField(max_length=255)
+    contenu = models.TextField()
+    date_creation = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.contenu
+
+
+class Reponse(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    contenu = models.TextField()
+    date_creation = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.contenu
+
+
 class Annuaire(models.Model):
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255)  
