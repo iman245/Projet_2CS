@@ -28,7 +28,7 @@ function DF(props) {
 
   return (
     <div>
-      <Navbar/>
+      <Navbar/>{/* Navbar */}
       <Chatbot/>
     <div className={cn(styles.root, props.className, "details-formation")}>
       <ScrollToTop />
