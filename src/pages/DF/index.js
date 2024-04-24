@@ -5,7 +5,7 @@ import StarRatingComponent from "react-star-rating-component";
 import { Link} from 'react-router-dom';
 import Navbar from "../../components/navbar/navbar";
 import Footer from "../../components/Footer/Footer";
-
+import Chatbot from "../../components/chatbot/Chatbot";
 import styles from "./index.module.scss";
 
 
@@ -29,6 +29,7 @@ function DF(props) {
   return (
     <div>
       <Navbar/>
+      <Chatbot/>
     <div className={cn(styles.root, props.className, "details-formation")}>
       <ScrollToTop />
       <div className={styles.rect1}>

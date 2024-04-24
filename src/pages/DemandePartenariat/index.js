@@ -5,6 +5,7 @@ import countryList from "react-select-country-list";
 import styles from "./index.module.scss";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
+import Chatbot from "../../components/chatbot/Chatbot";
 
 function ScrollToTop() {
   useEffect(() => {
@@ -44,6 +45,7 @@ function DemandePartenariat(props) {
   return (
     <div className={cn(styles.root, props.className, "demande-partenariat")}>
       <ScrollToTop />
+      <Chatbot />
       <div className={styles.rect1} />
       <div className={styles.rectBlanc} />
       <img

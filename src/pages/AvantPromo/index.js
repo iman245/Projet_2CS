@@ -5,6 +5,7 @@ import Collapsible from 'react-collapsible';
 import Navbar from "../../components/navbar/navbar";
 import styles from "./index.module.scss";
 import Footer from "../../components/Footer/Footer";
+import Chatbot from "../../components/chatbot/Chatbot";
 function AvantPromo(props) {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -24,6 +25,7 @@ function AvantPromo(props) {
   return (
     <div>
     <Navbar/>
+    <Chatbot/>
     <div className={cn(styles.root, props.className, "AvantPromo")}>
       <div className={styles.infoContainer}>
         <div className={styles.infoTextContainer}>

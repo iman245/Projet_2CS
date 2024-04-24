@@ -5,6 +5,7 @@ import styles from './index.module.scss';
 import {  Link } from 'react-router-dom';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/Footer/Footer';
+import Chatbot from "../../components/chatbot/Chatbot";
 
 function ScrollToTop() {
   useEffect(() => {
@@ -67,6 +68,7 @@ function DemandeDevis(props) {
   return (
     <div>
       <Navbar/>
+      <Chatbot/>
     <div className={cn(styles.root, props.className, 'demande-devis')}>
       <ScrollToTop />
       <div className={styles.rect1} />
@@ -223,8 +225,7 @@ function DemandeDevis(props) {
       
       
       
-      <div></div><img className={styles.image18} src={'/assets/solid_circle_icon.png'} alt="alt text" />
-      <img className={styles.image19} src={'/assets/pixel_robot_face.png'} alt="alt text" />
+      <div></div>
     </div>
     <Footer/>
     </div>

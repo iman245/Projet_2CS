@@ -6,6 +6,7 @@ import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/Footer/Footer';
 import styles from './index.module.scss';
 import FormationCard from './FormationCard';
+import Chatbot from "../../components/chatbot/Chatbot";
 
 const optionsType = [
     { value: 'Avant Promotion', label: 'Avant Promotion' },
@@ -76,6 +77,7 @@ function CatalogueFormation(props) {
   return (
     <div>
       <Navbar/>
+      <Chatbot/>
     <div className={cn(styles.root, props.className, 'cf')}>
 
       <div className={styles.filterSearch}>

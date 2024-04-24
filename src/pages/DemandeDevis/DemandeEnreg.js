@@ -4,6 +4,7 @@ import cn from 'classnames';
 import styles from './index.module.scss';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/Footer/Footer';
+import Chatbot from "../../components/chatbot/Chatbot";
 
 function ScrollToTop() {
   useEffect(() => {
@@ -21,6 +22,7 @@ function DemandeEnreg(props) {
       <div className={cn(styles.rootEnreg, props.className, 'demande-devis')}>
        <ScrollToTop />
        <Navbar/>
+       <Chatbot/>
         <div className={styles.rect1Enreg} />
   
         <div className={styles.formDevis} >
