@@ -16,6 +16,7 @@ import DemandeEnregistree from './pages/DemandeDevis/DemandeEnreg'
 import DemandePartenariat from './pages/DemandePartenariat/index'
 import DetailsClubs from './pages/DetailsClubs/clubsdetails'
 import DF from './pages/DF/index'
+import DemandePartenariatFinale from './pages/DemandePartenariatFinale/DemandePartenariatFinale';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         < Route path ="/DemandePartenariat" element ={<DemandePartenariat/>}/>
         < Route path ="/DetailsClubs" element ={<DetailsClubs/>}/>
         < Route path ="/DetailsFormation" element ={<DF/>}/>
+        < Route path ="/DemandePartenariatFinale" element ={<DemandePartenariatFinale/>}/>
         
 
 

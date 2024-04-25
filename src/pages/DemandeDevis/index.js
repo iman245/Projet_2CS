@@ -99,6 +99,7 @@ function DemandeDevis(props) {
       </h5>
       </div>
 
+      <div className={styles.formContainer}>
       <div className={styles.formDevis} >
       <div className={styles.rect2} />
       <input
@@ -220,12 +221,8 @@ function DemandeDevis(props) {
     </div>
 
 
-      
-      
-      
-      
-      
-      <div></div>
+    </div>
+
     </div>
     <Footer/>
     </div>
