@@ -13,7 +13,6 @@ import AvantPromo from './pages/AvantPromo/index'
 import CatalogueFormation from './pages/CatalogueFormations/index'
 import DemandeDevis from './pages/DemandeDevis/index'
 import DemandeEnregistree from './pages/DemandeDevis/DemandeEnreg'
-import DemandePartenariat from './pages/DemandePartenariat/index'
 import DetailsClubs from './pages/DetailsClubs/clubsdetails'
 import DF from './pages/DF/index'
 import DemandePartenariatFinale from './pages/DemandePartenariatFinale/DemandePartenariatFinale';
@@ -37,7 +36,6 @@ function App() {
         < Route path ="/CatalogueFormation" element ={<CatalogueFormation/>}/>
         < Route path ="/DemandeDevis" element ={<DemandeDevis/>}/>
         < Route path ="/DemandeEnregistree" element ={<DemandeEnregistree/>}/>
-        < Route path ="/DemandePartenariat" element ={<DemandePartenariat/>}/>
         < Route path ="/DetailsClubs" element ={<DetailsClubs/>}/>
         < Route path ="/DetailsFormation" element ={<DF/>}/>
         < Route path ="/DemandePartenariatFinale" element ={<DemandePartenariatFinale/>}/>
