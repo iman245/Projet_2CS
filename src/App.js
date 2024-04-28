@@ -8,6 +8,8 @@ import Enseignants from'./pages/Annuaire/Enseignants'
 import Alumni from './pages/Annuaire/Alumni';
 import Projets from './pages/Lmcs/Projets';
 import Equipe from './pages/Lmcs/Equipe';
+import Sidebar from './components/SidebarAdmin/Sidebar';
+import NavbarAdmin from './components/navbar/NavbarAdmin';
 
 
 function App() {
@@ -23,6 +25,7 @@ function App() {
         < Route path ="/AnnuaireAlumni" element ={<Alumni/>}/>
         < Route path ="/LMCSProjects" element ={<Projets/>}/>
         < Route path ="/LMCSTeams" element ={<Equipe/>}/>
+        < Route path ="/coucou" element={<Sidebar/>}/>
       </Routes>
       </BrowserRouter>
     </div>

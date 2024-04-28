@@ -10,6 +10,8 @@ import './QuickFact.css'
 function QuickFact () {
   return (
     <div className='TotaleQuickFact'>
+      <div className='QuickFactTitre'>Saviez vous que ...?</div>
+      <hr className="hr-line"/>
       <div className='quickFactFull-container'>
         <div className='quickFact-title'></div>
         <div className='quickFact-container'>

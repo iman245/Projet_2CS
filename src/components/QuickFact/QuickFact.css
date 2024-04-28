@@ -1,3 +1,6 @@
+.TotaleQuickFact{
+    margin: 70px 0px;
+}
 .quickFact-section1{
     display: flex;
     flex-direction: row;
@@ -5,11 +8,18 @@
     align-content: center;
     width: 100%;
 }
+.quickFactFull-container{
+    margin: 25px 0px;
+}
 .quickFact-container{
     background-color: white;
     display: flex;
     flex-direction: row;
+    width: 98%;
+    text-align:center;
+    margin: auto;
 }
+
 .quickFact-FullSect1{
     background-color: #0061B1;
     clip-path: polygon(0% 0,50% 0, 100% 0, 85% 100%, 0 100%);
@@ -163,6 +173,15 @@
 .quickFactWord{
     font-family: "Roboto Condensed", sans-serif;
     font-size: 18px;
+}
+.QuickFactTitre{
+    font-size:40px;
+    color: #0061B1;
+    padding: 20px 0;
+    text-align: center;
+    margin: auto;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 500;
 }
 .quickFactNbr{
     position: absolute;

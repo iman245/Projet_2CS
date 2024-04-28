@@ -6,9 +6,17 @@ import logo from '../../assets/images/logo_esi1.svg'
 import { Link } from 'react-router-dom'
 import listItem from './NavbarItems'
 import navImg from '../../assets/images/navImg.jpg'
+import DropdownNav from './DropdownNav'
 
 const Navbar = () => {
-    
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+    const handleMouseEnter = (index) => {
+        setHoveredIndex(index);
+    }
+
+    const handleMouseLeave = () => {
+        setHoveredIndex(null);
+    }
     const [navSmallSize, setNavSmallSize] = useState(false);
     const [openMenuSmallNav, setOpenMenuSmallNav] = useState(false);
     useEffect(() => {
@@ -35,33 +43,22 @@ const Navbar = () => {
                                 <TopNav/>
                             </div>
                             <div className='navPart2'>
-                                <ul>
-                                    {listItem.map((item)=>{
-                                        return(
-                                            <li className='navItem'>{item.label}</li>
-                                        )
-                                    })}
+                                <ul className='navPart2UL'>
+                                {listItem.map((item, index) => {
+                                return (
+                                    <li className='navItem' onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>{item.label}
+                                        {hoveredIndex === index && (
+                                            <div className='toggleNavbarItem'>
+                                                <DropdownNav subMenu={item.subMenu} hoveredIndex={hoveredIndex} index={index} />
+                                            </div>
+                                        )}
+                                    </li>
+                                )
+                            })}
                                     <li><Link to='/Auth'><FontAwesomeIcon icon={faCircleUser} className='NavUserIcon'/></Link></li>
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                    <div className='hoverNavMenuItem'>
-                        <div className='sectionHoverMenu'>
-                            <img src={navImg} alt='' className='navImg'></img>
-                            <div className='navItem-contact'>Contactez-Nous</div>
-                            <div className='navItem-Text'>Pour toute question ou demande d'information, n'hésitez pas à nous contacter.</div>
-                        </div>
-                        <ul className='sectionHoverMenu'>
-                                <li className='navItem-title'>Recherche</li>
-                                <li className='hoverNavItem'>LMCS</li>
-                                <li className='hoverNavItem'>LCSI</li>
-                        </ul>
-                        <ul className='sectionHoverMenu'>
-                                <li className='navItem-title'>Recherche</li>
-                                <li className='hoverNavItem'>LMCS</li>
-                                <li className='hoverNavItem'>LCSI</li>
-                        </ul>
                     </div>
                 </div>
             ):( 
