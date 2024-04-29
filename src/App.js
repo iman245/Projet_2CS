@@ -8,6 +8,8 @@ import Enseignants from'./pages/Annuaire/Enseignants'
 import Alumni from './pages/Annuaire/Alumni';
 import Projets from './pages/Lmcs/Projets';
 import Equipe from './pages/Lmcs/Equipe';
+import Sidebar from './components/SidebarAdmin/Sidebar';
+
 
 import AvantPromo from './pages/AvantPromo/index'
 import CatalogueFormation from './pages/CatalogueFormations/index'
