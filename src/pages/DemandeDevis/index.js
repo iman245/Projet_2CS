@@ -6,7 +6,7 @@ import {  Link } from 'react-router-dom';
 import Navbar from '../../components/navbar/navbar';
 import Footer from '../../components/Footer/Footer';
 import Chatbot from "../../components/chatbot/Chatbot";
-
+import Datepicker from './Datepicker';
 function ScrollToTop() {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -202,7 +202,8 @@ function DemandeDevis(props) {
       <img className={styles.image2} 
       src={selectedOption === 'option1' ? '/assets/white_wrench_icon.png' : '/assets/wrench_icon.png'}
       alt="alt text" />
-      <div className={styles.text6}>Date Debut</div>
+      <div className={styles.text6}>
+      <Datepicker placeholderText="Date Debut"/> </div>
        
 
 
@@ -214,7 +215,7 @@ function DemandeDevis(props) {
 
 
       <div className={styles.line6} />
-      <div className={styles.text7}>Date Fin</div>
+      <div className={styles.text7}><Datepicker placeholderText="Date Fin"/> </div>
       <img className={styles.image31} src={'/assets/calendar_icon.png'} alt="alt text" />
       <div className={styles.line7} />
      
