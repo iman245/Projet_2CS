@@ -136,20 +136,25 @@ descImg{
     padding:10px
     
 }
+.expanded{
+  height: auto !important; /* Override height to expand */
+  overflow-y: visible !important; /* Ensure overflow is visible when expanded */
 
+
+}
 .descParagraph{
-
-width: 800px;
+  height: 218px; /* Set default height */
+  overflow: hidden; /* Hide overflow */
+  transition: height 0.3s ease; /* Smooth transition */
+width: 750px;
 
 
 font-family: 'Open Sans';
 font-style: normal;
 font-weight: 600;
-font-size: 20px;
-line-height: 40px;
-/* or 200% */
-display: flex;
-align-items: flex-end;
+font-size: 16px;
+line-height: 30px;
+
 
 color: #000000;
 }
