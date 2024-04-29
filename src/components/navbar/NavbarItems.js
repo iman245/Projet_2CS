@@ -19,7 +19,7 @@ const listItem=[
                         lien:''
                     },{
                         item:'Annuaire',
-                        lien:''
+                        lien:'/AnnuaireEnseignants'
                     },{
                         item:'Contact',
                         lien:''
@@ -36,7 +36,7 @@ const listItem=[
                         lien:''
                     },{
                         item:'Clubs',
-                        lien:''
+                        lien:'/DetailsClubs'
                     },{
                         item:'Fablab',
                         lien:''
@@ -119,7 +119,7 @@ const listItem=[
                             items:[
                                 {
                                     item:'LMCS',
-                                    lien:''
+                                    lien:'/LMCSProjects'
                                 },{
                                     item:'LCSI',
                                     lien:''
@@ -155,10 +155,10 @@ const listItem=[
                                 items:[
                                     {
                                         item:'Formation a la carte ',
-                                        lien:''
+                                        lien:'/CatalogueFormation'
                                     },{
                                         item:'Formation avant promotion',
-                                        lien:''
+                                        lien:'/AvantPromo'
                                     }]
                             },
                             {
@@ -172,10 +172,10 @@ const listItem=[
                                         lien:''
                                     },{
                                         item:'Demander devis',
-                                        lien:''
+                                        lien:'/DemandeDevis'
                                     },{
                                         item:'Demander partenariat',
-                                        lien:''
+                                        lien:'/DemandePartenariatFinale'
                                     }]
                             },
                         ]
