@@ -9,8 +9,15 @@ import Alumni from './pages/Annuaire/Alumni';
 import Projets from './pages/Lmcs/Projets';
 import Equipe from './pages/Lmcs/Equipe';
 import Sidebar from './components/SidebarAdmin/Sidebar';
-import NavbarAdmin from './components/navbar/NavbarAdmin';
 
+
+import AvantPromo from './pages/AvantPromo/index'
+import CatalogueFormation from './pages/CatalogueFormations/index'
+import DemandeDevis from './pages/DemandeDevis/index'
+import DemandeEnregistree from './pages/DemandeDevis/DemandeEnreg'
+import DetailsClubs from './pages/DetailsClubs/clubsdetails'
+import DF from './pages/DF/index'
+import DemandePartenariatFinale from './pages/DemandePartenariatFinale/DemandePartenariatFinale';
 
 function App() {
   return (
@@ -25,7 +32,20 @@ function App() {
         < Route path ="/AnnuaireAlumni" element ={<Alumni/>}/>
         < Route path ="/LMCSProjects" element ={<Projets/>}/>
         < Route path ="/LMCSTeams" element ={<Equipe/>}/>
-        < Route path ="/coucou" element={<Sidebar/>}/>
+
+
+        < Route path ="/AvantPromo" element ={<AvantPromo/>}/>
+        < Route path ="/CatalogueFormation" element ={<CatalogueFormation/>}/>
+        < Route path ="/DemandeDevis" element ={<DemandeDevis/>}/>
+        < Route path ="/DemandeEnregistree" element ={<DemandeEnregistree/>}/>
+        < Route path ="/DetailsClubs" element ={<DetailsClubs/>}/>
+        < Route path ="/DetailsFormation" element ={<DF/>}/>
+        < Route path ="/DemandePartenariatFinale" element ={<DemandePartenariatFinale/>}/>
+        
+
+
+
+
       </Routes>
       </BrowserRouter>
     </div>

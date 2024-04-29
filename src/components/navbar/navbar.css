@@ -239,7 +239,14 @@
     color: #0061B1;
 }
 .hoverNavItem{
-    margin: 15px 0px;
+    margin: 10px 0px;
+}
+.hoverNavItem{
+    color: #0061B1;
+    font-family: "Open sans", sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 10px 0;
 }
 .navItem-title{
     font-family: "Open sans", sans-serif;

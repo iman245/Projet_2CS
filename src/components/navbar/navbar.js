@@ -8,17 +8,12 @@ import listItem from './NavbarItems'
 import navImg from '../../assets/images/navImg.jpg'
 import DropdownNav from './DropdownNav'
 
-const Navbar = () => {
+function Navbar () {
     const [hoveredIndex, setHoveredIndex] = useState(null);
-    const handleMouseEnter = (index) => {
-        setHoveredIndex(index);
-    }
-
-    const handleMouseLeave = () => {
-        setHoveredIndex(null);
-    }
     const [navSmallSize, setNavSmallSize] = useState(false);
     const [openMenuSmallNav, setOpenMenuSmallNav] = useState(false);
+    const leaveDelay = 300; // Délai en millisecondes
+
     useEffect(() => {
         const handleResize = () => {
           setNavSmallSize(window.innerWidth < 920);
@@ -31,37 +26,64 @@ const Navbar = () => {
         return () => {
           window.removeEventListener('resize', handleResize);
         };
-      }, []);
-  return (
-    <div className='navbar-full-container'>
-            {!navSmallSize? (
+    }, []);
+
+    const handleMouseEnter = (index) => {
+        clearTimeout(leaveTimer);
+        setHoveredIndex(index);
+    };
+
+    const handleMouseLeave = () => {
+        // Réinitialiser l'état seulement si le curseur ne survole pas l'élément principal ou le sous-menu
+        const isStillHovered = document.querySelector('.navItem:hover') || document.querySelector('.toggleNavbarItem:hover');
+        if (!isStillHovered) {
+            leaveTimer = setTimeout(() => {
+                setHoveredIndex(null);
+            }, leaveDelay);
+        }
+    }
+
+    let leaveTimer;
+
+    return (
+        <div className='navbar-full-container'>
+            {!navSmallSize ? (
                 <div className='navbar-totale'>
-                    <div className='navbar-container'>
-                        <img className='navbarLogo' src={logo} alt=''></img>
-                        <div className='navbar-links'>
-                            <div className='navPart1'>
-                                <TopNav/>
-                            </div>
-                            <div className='navPart2'>
-                                <ul className='navPart2UL'>
+                <div className='navbar-container'>
+                    <img className='navbarLogo' src={logo} alt=''></img>
+                    <div className='navbar-links'>
+                        <div className='navPart1'>
+                            <TopNav />
+                        </div>
+                        <div className='navPart2'>
+                            <ul className='navPart2UL'>
                                 {listItem.map((item, index) => {
-                                return (
-                                    <li className='navItem' onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>{item.label}
-                                        {hoveredIndex === index && (
-                                            <div className='toggleNavbarItem'>
-                                                <DropdownNav subMenu={item.subMenu} hoveredIndex={hoveredIndex} index={index} />
-                                            </div>
-                                        )}
-                                    </li>
-                                )
-                            })}
-                                    <li><Link to='/Auth'><FontAwesomeIcon icon={faCircleUser} className='NavUserIcon'/></Link></li>
-                                </ul>
-                            </div>
+                                    return (
+                                        <li
+                                            className='navItem'
+                                            onMouseEnter={() => handleMouseEnter(index)}
+                                            onMouseLeave={handleMouseLeave}
+                                        >
+                                            {item.label}
+                                            {hoveredIndex === index && (
+                                                <div className='toggleNavbarItem'>
+                                                    <DropdownNav
+                                                        subMenu={item.subMenu}
+                                                        hoveredIndex={hoveredIndex}
+                                                        index={index}
+                                                    />
+                                                </div>
+                                            )}
+                                        </li>
+                                    )
+                                })}
+                                <li><Link to='/Auth'><FontAwesomeIcon icon={faCircleUser} className='NavUserIcon' /></Link></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-            ):( 
+            </div>
+            ) : (
                 <div className='collapseNavbar-container'>
                     <div className='topSectionNav'>
                         <img className='navCollapLogo' src={logo} alt=''></img>
@@ -130,9 +152,10 @@ const Navbar = () => {
                     </div>
                 </div>
             )}
-        
-    </div>
-  )
+        </div>
+    )
 }
 
-export default Navbar
+export default Navbar;
+
+
