@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from publication.views import *
-
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', get_all_users, name='get_all_users'),  # URL for getting all users and creating new users
@@ -76,5 +77,5 @@ urlpatterns = [
     path('annuaire/grades/', get_all_grades, name='get_all_grades'),
     path('annuaire/promotions/', get_all_promotions, name='get_all_promotions'),
     path('annuaire/services/', get_all_services, name='get_all_services'),
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
