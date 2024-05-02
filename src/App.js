@@ -6,18 +6,28 @@ import Enseignants from'./Pages/Annuaire/Enseignants'
 import Alumni from './Pages/Annuaire/Alumni';
 import Projets from './Pages/Lmcs/Projets';
 import Equipe from './Pages/Lmcs/Equipe';
+import Lcsi from './Pages/LCSI/Lcsi';
+import Chercheur from './Pages/Chercheur/Chercheur';
+import Publications from './Pages/Chercheur/Publications'
 
 function App() {
   return (
-    // <Router>
-    //  <Routes>
-    //   < Route path ="/" element ={<Annuaire/>}/>
-    //   < Route path ="Enseignants" element={<Enseignants/> }/>
-    //   < Route path ="Alumni" element ={<Alumni/>}/>
-    // </Routes>
-    // </Router>
-    // <Projets/>
-    <Equipe/>
+    <Router>
+     <Routes>
+      < Route path ="/" element ={<Annuaire/>}/>
+      < Route path ="Enseignants" element={<Enseignants/> }/>
+      < Route path ="Alumni" element ={<Alumni/>}/>
+      <Route path="Projets" element={<Projets/>}/>
+      <Route path="Equipe" element={<Equipe/>}/>
+      <Route path="Lcsi" element={<Lcsi/>}/>
+      <Route path="Chercheur" element={<Chercheur/>}/>
+      <Route path="Publications" element={<Publications/>}/>
+
+      {/* <Route path="AvantPromo" element={<AvantPromo/>}/> */}
+    </Routes>
+    </Router>
+  
+    
   );
 }
 
