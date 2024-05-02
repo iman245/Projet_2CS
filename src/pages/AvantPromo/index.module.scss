@@ -107,7 +107,7 @@
  
   width: 567px;
   height: 140px;
-  font: 400 13px/1.7 "Poppins", Helvetica, Arial, serif;
+  font: 400 13px/2 "Poppins", Helvetica, Arial, serif;
   color: rgb(0, 0, 0);
 }
 .line1 {
@@ -179,7 +179,7 @@
   color: rgb(0, 97, 177);
 }
 .subtitle2 {
-  margin-top:45px;
+  margin-top:55px;
   height: 20px;
   font: 600 23px/0.86 "Poppins", Helvetica, Arial, serif;
   color: rgb(0, 97, 177);
@@ -188,7 +188,7 @@
   margin-top:22px;
   width: 554px;
   height: 220px;
-  font: 400 13px/1.7 "Poppins", Helvetica, Arial, serif;
+  font: 400 13px/2 "Poppins", Helvetica, Arial, serif;
   color: rgb(0, 0, 0);
 }
 .docContainer{
@@ -541,10 +541,12 @@ color: #FFFFFF;
 }
 .chevronIconOpen {
   transform: rotate(180deg);
+  cursor: pointer;
   
 }
 .chevronIcon{
   margin-right: 8px;
+  cursor: pointer;
 }
 
 .collapsibleTriggerOpened {
