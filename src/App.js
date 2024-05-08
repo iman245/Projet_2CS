@@ -9,6 +9,8 @@ import Equipe from './Pages/Lmcs/Equipe';
 import Lcsi from './Pages/LCSI/Lcsi';
 import Chercheur from './Pages/Chercheur/Chercheur';
 import Publications from './Pages/Chercheur/Publications'
+import Post from './Pages/Postgraduation/Post'
+// import Postgraduation from './Pages/Postgraduation/Postgraduation'
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
       <Route path="Lcsi" element={<Lcsi/>}/>
       <Route path="Chercheur" element={<Chercheur/>}/>
       <Route path="Publications" element={<Publications/>}/>
+      <Route path="Post" element={<Post/>}/>
+      {/* <Route path="Postgraduation" element={<Postgraduation/>}/> */}
 
       {/* <Route path="AvantPromo" element={<AvantPromo/>}/> */}
     </Routes>
