@@ -5,7 +5,7 @@ import { GoMail } from "react-icons/go";
 import { FaPhone } from "react-icons/fa";
 import { MdPlace } from "react-icons/md";
 import { FcNext, FcPrevious } from "react-icons/fc"; 
-import Header from "../../Components/header";
+import Header from "../../components/header";
 import '../Annuaire/Annuaire.css';
 
 const pageSize = 6; 

@@ -4,7 +4,7 @@ import { IoMdSearch, IoIosArrowDown } from "react-icons/io";
 import { GoMail } from "react-icons/go";
 import { FaLinkedinIn } from "react-icons/fa";
 import { FcNext, FcPrevious } from "react-icons/fc"; 
-import Header from "../../Components/header";
+import Header from "../../components/header";
 import '../Annuaire/Annuaire.css';
 ;
 
