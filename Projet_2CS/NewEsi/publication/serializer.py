@@ -85,7 +85,7 @@ class ProjetSerializer(serializers.ModelSerializer):
 class Theme_RechercheSerializer(serializers.ModelSerializer):
     class Meta:
         model = Theme_Recherche
-        fields = ['id_theme', 'nom', 'description','themes']
+        fields = ['id_theme', 'nom', 'description']
 
 
 

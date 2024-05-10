@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny
 from django.db.models import Q
 from .decorators import *
 @api_view(['GET'])
+@user_types_required('adminstrateur')
 def get_all_users(request):
     if request.method == 'GET':
         queryset = Utilisateur.objects.all()
@@ -16,7 +17,7 @@ def get_all_users(request):
         return Response(serializer.data)
     
 @api_view(['POST']) 
-@permission_classes([AllowAny])   
+@user_types_required('adminstrateur')   
 def add_user(request):
     if request.method == 'POST':
         data = request.data.copy()  # Create a copy of the request data
@@ -48,13 +49,14 @@ def login_user(request):
 
         
 @api_view(['PUT'])
+@user_types_required('adminstrateur')
 def edit_user(request, pk):
     try:
         user = Utilisateur.objects.get(pk=pk)
     except Utilisateur.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'POST':
+    if request.method == 'PUT':
         data = request.data.copy()  # Create a copy of the request data
         data.pop('id', None)  # Remove 'id' field if present
         serializer = UtilisateurSerializer(data=data)
@@ -64,6 +66,7 @@ def edit_user(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
+@user_types_required('adminstrateur')
 def search_user(request):
     if request.method == 'GET':
         query_params = request.query_params
@@ -91,6 +94,7 @@ def search_user(request):
         return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @api_view(['DELETE'])
+@user_types_required('adminstrateur')
 def delete_user(request, pk):
     try:
         user = Utilisateur.objects.get(pk=pk)
@@ -137,6 +141,36 @@ def add_publication(request):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+@api_view(['POST'])
+@user_types_required('editeur')
+def add_event(request):
+    if request.method == 'POST':
+
+        request.data['type_publication'] = 'event'
+        request.data['etat']='en attente'
+        serializer = PublicationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@user_types_required('editeur')
+def add_actualité(request):
+    if request.method == 'POST':
+
+        request.data['type_publication'] = 'actualité'
+        request.data['etat']='en attente'
+        serializer = PublicationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['GET'])
 def search_publication(request):
     if request.method == 'GET':
@@ -165,6 +199,7 @@ def search_publication(request):
         return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 # PUT edit a publication by ID
 @api_view(['PUT'])
+@user_types_required('editeur')
 def edit_publication(request, pk):
     try:
         publication = Publication.objects.get(pk=pk)
@@ -220,6 +255,7 @@ def refuse_publication(request, pk):
 
 # DELETE a publication by ID
 @api_view(['DELETE'])
+@user_types_required('adminstrateur')
 def delete_publication(request, pk):
     try:
         publication = Publication.objects.get(pk=pk)
@@ -247,6 +283,7 @@ def get_club_members(request, club_id):
 
 # Add a member to a club
 @api_view(['POST'])
+@user_types_required('editeur')
 def add_club_member(request, club_id):
     if request.method == 'POST':
         try:
@@ -270,6 +307,7 @@ def get_all_clubs(request):
 
 # Create a new club
 @api_view(['POST'])
+@user_types_required('adminstrateur')
 def create_club(request):
     if request.method == 'POST':
         serializer = ClubSerializer(data=request.data)
@@ -281,7 +319,7 @@ def create_club(request):
 
 # Update a Club
 @api_view(['PUT'])
-
+@user_types_required('editeur')
 def update_club(request, club_id):
     club = get_object_or_404(Club, id_club=club_id)
     if request.method == 'PUT':
@@ -293,7 +331,7 @@ def update_club(request, club_id):
 
 # Delete a Club
 @api_view(['DELETE'])
-
+@user_types_required('adminstrateur')
 def delete_club(request, club_id):
     club = get_object_or_404(Club, id_club=club_id)
     if request.method == 'DELETE':
@@ -310,7 +348,7 @@ def get_club_evenement_publications(request, club_id):
 
 # Add a publication of type 'evenement' to a club
 @api_view(['POST'])
-
+@user_types_required('editeur')
 def add_evenement_publication_to_club(request, club_id):
     club = get_object_or_404(Club, id_club=club_id)
     if request.method == 'POST':
@@ -326,7 +364,7 @@ def add_evenement_publication_to_club(request, club_id):
 
 # Update a Member
 @api_view(['PUT'])
-
+@user_types_required('editeur')
 def update_member(request, member_id):
     member = get_object_or_404(MembreClub, id_membre=member_id)
     if request.method == 'PUT':
@@ -338,6 +376,7 @@ def update_member(request, member_id):
 
 # Delete a Member
 @api_view(['DELETE'])
+@user_types_required('adminstrateur')
 def delete_member(request, member_id):
     member = get_object_or_404(MembreClub, id_membre=member_id)
     if request.method == 'DELETE':
@@ -364,7 +403,7 @@ def get_clubs_by_name(request, name):
 
 
 @api_view(['POST'])
-
+@user_types_required('directeur_relex')
 def add_partenaire(request):
    if request.method == 'POST':
         if isinstance(request.data, list):  # If data is an array
@@ -408,6 +447,7 @@ def post_demande_partenariat(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
+@user_types_required('directeur_relex')
 def get_all_demande_partenariat(request):
     if request.method == 'GET':
         demandes = Demande_Partenariat.objects.all()
@@ -416,6 +456,7 @@ def get_all_demande_partenariat(request):
 
 
 @api_view(['PUT'])
+@user_types_required('directeur_relex')
 def accepter_demande_partenariat(request):
     demande_id = request.query_params.get('id')
     if demande_id is None:
@@ -437,6 +478,7 @@ def accepter_demande_partenariat(request):
 
 
 @api_view(['PUT'])
+@user_types_required('directeur_relex')
 def refuser_demande_partenariat(request):
     demande_id = request.query_params.get('id')
     if demande_id is None:
@@ -463,6 +505,7 @@ def add_devis(request):
 
 
 @api_view(['POST'])
+@user_types_required('directeur_relex')
 def valider_devis(request):
     devis_id = request.query_params.get('devis_id')
     if devis_id is None:
@@ -479,52 +522,75 @@ def valider_devis(request):
 
 
 @api_view(['GET'])
+@user_types_required('directeur_relex')
 def get_all_devis(request):
     if request.method == 'GET':
         queryset = Devis.objects.all()
         serializer = DevisSerializer(queryset, many=True)
         return Response(serializer.data)
 
-@api_view(['GET', 'POST'])
-
-def partenaire_labo_list(request):
-    if request.method == 'GET':
-        queryset = Partenaire_labo.objects.all()
-        serializer = Partenaire_laboSerializer(queryset, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
+@api_view(['POST'])
+@user_types_required('adminstrateur')
+def add_partenaire_labo(request):
+    if  request.method == 'POST':
         serializer = Partenaire_laboSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
+def partenaire_labo_list(request):
+    if request.method == 'GET':
+        queryset = Partenaire_labo.objects.all()
+        serializer = Partenaire_laboSerializer(queryset, many=True)
+        return Response(serializer.data)      
+
+
+@api_view(['GET'])
 def laboratoire_list(request):
     if request.method == 'GET':
         queryset = Laboratoire.objects.all()
         serializer = LaboratoireSerializer(queryset, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+
+
+@api_view([ 'POST'])
+@user_types_required('adminstrateur')
+def add_laboratoire(request):
+   
+    if request.method == 'POST':
         serializer = LaboratoireSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-@api_view(['GET', 'POST'])
-def chercheur_list(request):
-    if request.method == 'GET':
-        queryset = Utilisateur.objects.filter(is_chercheur=True)
-        serializer = UtilisateurSerializer(queryset, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
+
+
+
+
+
+@api_view(['POST'])
+@user_types_required('adminstrateur')
+def add_chercheur(request):
+    
+    if request.method == 'POST':
         serializer = UtilisateurSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
+
+
+@api_view(['GET'])
+def chercheur_list(request):
+    if request.method == 'GET':
+        queryset = Utilisateur.objects.filter(is_chercheur=True)
+        serializer = UtilisateurSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
 
 
 # @api_view(['GET', 'POST'])
@@ -536,11 +602,11 @@ def chercheur_list(request):
 #     elif request.method == 'POST':
 #         serializer = Equipe_ProjetSerializer(data=request.data)
 #         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=201)
+#             serializer.save()     
+#             return Response(serializer.data, status=201)           
 #         return Response(serializer.errors, status=400)
     
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def equipe_projet_list(request):
     if request.method == 'GET':
         # Assuming you want to filter equipe by authenticated Chercheur
@@ -550,7 +616,13 @@ def equipe_projet_list(request):
             return Response(serializer.data)
         else:
             return Response("You are not authorized to access this resource.", status=status.HTTP_403_FORBIDDEN)
-    elif request.method == 'POST':
+    
+
+
+@api_view([ 'POST'])
+@user_types_required('adminstrateur')
+def add_equipe_projet(request):
+    if request.method == 'POST':
         # You can add authorization logic here if required
         serializer = Equipe_ProjetSerializer(data=request.data)
         if serializer.is_valid():
@@ -558,39 +630,49 @@ def equipe_projet_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
-@api_view(['GET', 'POST'])
-def equipe_recherche_list(request):
-    if request.method == 'GET':
-        queryset = Equipe_Recherche.objects.all()
-        serializer = Equipe_RechercheSerializer(queryset, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
+
+@api_view(['POST'])
+@user_types_required('adminstrateur')
+def add_equipe_recherche(request):
+   if request.method == 'POST':
         serializer = Equipe_RechercheSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-@api_view(['GET', 'POST'])
-def projet_list(request):
+
+@api_view(['GET'])
+def equipe_recherche_list(request):
     if request.method == 'GET':
-        queryset = Projet.objects.all()
-        serializer = ProjetSerializer(queryset, many=True)
+        queryset = Equipe_Recherche.objects.all()
+        serializer = Equipe_RechercheSerializer(queryset, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    
+
+@api_view(['POST'])
+@user_types_required('editeur')
+def add_projet(request):
+   if request.method == 'POST':
         serializer = ProjetSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-@api_view(['GET', 'POST'])
-def theme_recherche_list(request):
+@api_view(['GET'])
+
+def projet_list(request):
     if request.method == 'GET':
-        queryset = Theme_Recherche.objects.all()
-        serializer = Theme_RechercheSerializer(queryset, many=True)
+        queryset = Projet.objects.all()
+        serializer = ProjetSerializer(queryset, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+   
+
+@api_view(['POST'])
+@user_types_required('adminstrateur')
+def add_theme_recherche(request):
+   if request.method == 'POST':
         serializer = Theme_RechercheSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -598,6 +680,13 @@ def theme_recherche_list(request):
         return Response(serializer.errors, status=400)
 
 
+@api_view(['GET'])
+def theme_recherche_list(request):
+    if request.method == 'GET':
+        queryset = Theme_Recherche.objects.all()
+        serializer = Theme_RechercheSerializer(queryset, many=True)
+        return Response(serializer.data)
+   
 
 
 @api_view(['POST'])
@@ -641,6 +730,7 @@ def GetQuestions(request, category):
 
 
 @api_view(['POST'])
+@user_types_required('adminstrateur')
 def add_annuaire(request):
     if request.method == 'POST':
         category = request.data.get('category')
@@ -680,6 +770,7 @@ def get_Annuaire(request, pk):
 
 
 @api_view(['PUT'])
+@user_types_required('adminstrateur')
 def edit_Annuaire(request, pk):
     try:
         entry = Annuaire.objects.get(pk=pk)
@@ -694,6 +785,7 @@ def edit_Annuaire(request, pk):
 
 
 @api_view(['DELETE'])
+@user_types_required('adminstrateur')
 def delete_Annuaire(request, pk):
     try:
         entry = Annuaire.objects.get(pk=pk)

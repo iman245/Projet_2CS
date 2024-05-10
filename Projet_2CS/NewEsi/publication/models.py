@@ -199,7 +199,7 @@ class Equipe_Projet(models.Model):
         return self.nom
     
 class Theme_Recherche(models.Model):
-    id_theme = models.IntegerField(primary_key=True)
+    id_theme = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     description = models.TextField()
     # projets=models.ManyToManyField(Projet,related_name= "themes")
@@ -209,7 +209,7 @@ class Theme_Recherche(models.Model):
 
 
 class Projet(models.Model):
-    id_projet = models.IntegerField(primary_key=True)
+    id_projet = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     description = models.TextField()
     equipe_projet = models.ForeignKey(Equipe_Projet, on_delete=models.CASCADE)

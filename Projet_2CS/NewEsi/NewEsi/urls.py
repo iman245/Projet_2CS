@@ -45,13 +45,28 @@ urlpatterns = [
     path('Devis/demande',add_devis,name='add_devis'),
     path('Devis',get_all_devis,name='get_all_devis'),
     path('chercheur',chercheur_list,name='chercheur'),
+
     path('partenair_labo',partenaire_labo_list,name='partenaire_labo_list'),
+    path('add_partenair_labo',add_partenaire_labo,name='add_partenaire_labo'),
+
     path('labos',laboratoire_list,name='laboratoire_list'),
+    path('add_laboratoire',add_laboratoire,name='add_laboratoire'),
+    
+
     path('equipe_recherche',equipe_recherche_list,name='equipe_recherche_list'),
+    # path('add_equipe',add_equipe,{'formset': "EquipeFormSet"},name="ajouter_equipe"),
     path('chercheur',chercheur_list,name='chercheur'),
+    path('chercheur/add',add_chercheur,name='add_chercheur'),
+
     path('equipe_projet',equipe_projet_list,name='equipe_projet'),
+    path('equipe_projet/add',add_equipe_projet,name='add_equipe_projet'),
+
     path('theme',theme_recherche_list,name='theme'),
+    path('theme/add',add_theme_recherche,name='add_theme_recherche'),
+
     path('project',projet_list,name='project'),
+    path('project/add',add_projet,name='add_projet'),
+
     path('club/<int:club_id>/', get_club_members, name='get_club_members'),
     path('club/<int:club_id>/add_member/', add_club_member, name='add_club_member'),
     path('club/<int:club_id>/update/', update_club, name='update_club'),
@@ -77,5 +92,10 @@ urlpatterns = [
     path('annuaire/grades/', get_all_grades, name='get_all_grades'),
     path('annuaire/promotions/', get_all_promotions, name='get_all_promotions'),
     path('annuaire/services/', get_all_services, name='get_all_services'),
+
+    path('event/add', add_event, name='add_event'),
+    
+    path('actualité/add', add_actualité, name='add_actualité'),
+  
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
