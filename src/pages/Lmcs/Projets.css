@@ -42,9 +42,10 @@
   
   .description-container {
     background-color: #0B487A;
-    border-radius: 2px;
+    border-radius: 4px;
     margin-top:50px;
     margin-bottom: 30px;
+    /* width:70%; */
   }
   
   .description {
@@ -135,7 +136,7 @@
  .recherche-container {
     position:absolute;
     right: 22px; /* Déplacer le sidebar complètement à droite */
-    top: 168px; /* Optionnel : définir la position verticale du sidebar */
+    top: 300px; /* Optionnel : définir la position verticale du sidebar */
    /* Ajuster la largeur du sidebar si nécessaire */
     height: 60%; /* Ajuster la hauteur du sidebar si nécessaire */
 

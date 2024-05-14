@@ -38,6 +38,7 @@ function Recommended() {
   };
 
   return (
+    <div className='recommended'>
     <div className='recommended-container'>
       <Header />
 
@@ -100,6 +101,9 @@ function Recommended() {
         <button onClick={nextPage} disabled={currentPage === totalPages - 1}><FcNext /></button>
       </div>
     </div>
+    
+    
+   </div>
   );
 }
 
