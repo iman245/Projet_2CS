@@ -20,6 +20,11 @@ import DemandePartenariatFinale from './pages/DemandePartenariatFinale/DemandePa
 import DetailsClubsFinale from './pages/DetailsClubsFinale/DetailsClubsFinale';
 import ClubsFinal from './pages/ClubsFinal/ClubsFinal';
 import EsiFinal from './pages/EsiFinal/EsiFinal';
+import SuccessStories from './pages/SuccessStories/SuccessStories';
+import Contact from './pages/ContactRelex/Contact';
+import ProgrammeFinal from './pages/Programme/ProgrammeFinal';
+import DetailsPgme from './pages/DetailsPgme/DetailsPgme';
+import Specialites from './pages/Specialites/Specialites';
 
 function App() {
   return (
@@ -46,6 +51,11 @@ function App() {
         <Route path='/Clubs' element={<Clubs/>}></Route>
         < Route path ="/ClubsFinal" element ={<ClubsFinal/>}/>
         <Route path='/EsiFinal' element={<EsiFinal/>}></Route>
+        <Route path='/SuccessStories' element={<SuccessStories/>}></Route>
+        <Route path='/Contact' element={<Contact/>}></Route>
+        <Route path='/ProgrammeFinal' element={<ProgrammeFinal/>}></Route>
+        <Route path='/DetailsPgme' element={<DetailsPgme/>}></Route>
+        <Route path='/Specialites' element={<Specialites/>}></Route>
         
 
 
