@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render,get_object_or_404
 from .models import Utilisateur, Publication
 from .serializer import *
@@ -8,6 +9,7 @@ from rest_framework.decorators import api_view , permission_classes
 from rest_framework.permissions import AllowAny
 from django.db.models import Q
 from .decorators import *
+from django.core.mail import send_mail
 @api_view(['GET'])
 @user_types_required('adminstrateur')
 def get_all_users(request):
@@ -141,21 +143,31 @@ def add_publication(request):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
 @api_view(['POST'])
 @user_types_required('editeur')
 def add_event(request):
     if request.method == 'POST':
-
+        request.data['publisher'] = request.user.id
         request.data['type_publication'] = 'event'
-        request.data['etat']='en attente'
+        request.data['etat'] = 'en attente'
         serializer = PublicationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            sujet = "Demande de publication"
+            
+            message = f"Une nouvelle demande de publication est insérée, intitulé: {request.data['titre']}.\n"
+            message += "en attendant votre validation "
+            message += "Merci !"
+
+            send_mail(
+                subject=sujet,
+                message=message,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=["ks_soukane@esi.dz"],   
+                fail_silently=True,
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['POST'])
 @user_types_required('editeur')
