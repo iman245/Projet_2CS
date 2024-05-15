@@ -1,5 +1,6 @@
+from django.conf import settings
 from django.shortcuts import render,get_object_or_404
-from .models import Utilisateur, Publication
+from .models import *
 from .serializer import *
 from rest_framework.views import APIView 
 from rest_framework.response import Response
@@ -8,7 +9,9 @@ from rest_framework.decorators import api_view , permission_classes
 from rest_framework.permissions import AllowAny
 from django.db.models import Q
 from .decorators import *
+from django.core.mail import send_mail
 @api_view(['GET'])
+@user_types_required('adminstrateur')
 def get_all_users(request):
     if request.method == 'GET':
         queryset = Utilisateur.objects.all()
@@ -16,7 +19,7 @@ def get_all_users(request):
         return Response(serializer.data)
     
 @api_view(['POST']) 
-@permission_classes([AllowAny])   
+@user_types_required('adminstrateur')   
 def add_user(request):
     if request.method == 'POST':
         data = request.data.copy()  # Create a copy of the request data
@@ -35,7 +38,6 @@ def add_user(request):
 def login_user(request):
     if request.method == 'POST':
         email = request.data.get('email', None)
-
         if not email:
             return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
         if Utilisateur.objects.filter(email=email).exists():
@@ -48,13 +50,14 @@ def login_user(request):
 
         
 @api_view(['PUT'])
+@user_types_required('adminstrateur')
 def edit_user(request, pk):
     try:
         user = Utilisateur.objects.get(pk=pk)
     except Utilisateur.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'POST':
+    if request.method == 'PUT':
         data = request.data.copy()  # Create a copy of the request data
         data.pop('id', None)  # Remove 'id' field if present
         serializer = UtilisateurSerializer(data=data)
@@ -64,6 +67,7 @@ def edit_user(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
+@user_types_required('adminstrateur')
 def search_user(request):
     if request.method == 'GET':
         query_params = request.query_params
@@ -91,6 +95,7 @@ def search_user(request):
         return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @api_view(['DELETE'])
+@user_types_required('adminstrateur')
 def delete_user(request, pk):
     try:
         user = Utilisateur.objects.get(pk=pk)
@@ -137,6 +142,72 @@ def add_publication(request):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+@user_types_required('editeur')
+def add_event(request):
+    if request.method == 'POST':
+        request.data['publisher'] = request.user.id
+        cat_id = request.data['categorie']
+        category = Categorie.objects.get(id=cat_id)
+        user = Utilisateur.objects.filter(is_admin=True, categorie=category).first()
+        if user is None:
+            return Response({"error": "No admin user found for this category"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        request.data['type_publication'] = 'event'
+        request.data['etat'] = 'en attente'
+        serializer = PublicationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            sujet = "Demande de publication"
+            
+            message = f"Une nouvelle demande de publication est insérée, intitulé: {request.data['titre']}.\n"
+            message += "en attendant votre validation "
+            message += "Merci !"
+
+            send_mail(
+                subject=sujet,
+                message=message,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[user.email],   
+                fail_silently=True,
+            )
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@user_types_required('editeur')
+def add_actualité(request):
+    if request.method == 'POST':
+
+        request.data['type_publication'] = 'actualité'
+        request.data['etat']='en attente'
+        serializer = PublicationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def create_categorie(request):
+    if request.method == 'POST':
+        serializer = CategorieSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+def delete_categorie(request, categorie_id):
+    try:
+        categorie = Categorie.objects.get(pk=categorie_id)
+    except Categorie.DoesNotExist:
+        return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    categorie.delete()
+    return Response({"success": "Category deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
 @api_view(['GET'])
 def search_publication(request):
     if request.method == 'GET':
@@ -165,6 +236,7 @@ def search_publication(request):
         return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 # PUT edit a publication by ID
 @api_view(['PUT'])
+@user_types_required('editeur')
 def edit_publication(request, pk):
     try:
         publication = Publication.objects.get(pk=pk)
@@ -197,8 +269,30 @@ def validate_publication(request, pk):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['PUT'])
+@user_types_required('adminstrateur')
+def refuse_publication(request, pk):
+    try:
+        publication = Publication.objects.get(pk=pk)
+    except Publication.DoesNotExist:
+        return Response("Publication not found", status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        publication.etat = 'refuse'
+        publication.save()
+        serializer = PublicationSerializer(publication)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
+
 # DELETE a publication by ID
 @api_view(['DELETE'])
+@user_types_required('adminstrateur')
 def delete_publication(request, pk):
     try:
         publication = Publication.objects.get(pk=pk)
@@ -226,6 +320,7 @@ def get_club_members(request, club_id):
 
 # Add a member to a club
 @api_view(['POST'])
+@user_types_required('editeur')
 def add_club_member(request, club_id):
     if request.method == 'POST':
         try:
@@ -249,6 +344,7 @@ def get_all_clubs(request):
 
 # Create a new club
 @api_view(['POST'])
+@user_types_required('adminstrateur')
 def create_club(request):
     if request.method == 'POST':
         serializer = ClubSerializer(data=request.data)
@@ -260,7 +356,7 @@ def create_club(request):
 
 # Update a Club
 @api_view(['PUT'])
-
+@user_types_required('editeur')
 def update_club(request, club_id):
     club = get_object_or_404(Club, id_club=club_id)
     if request.method == 'PUT':
@@ -272,7 +368,7 @@ def update_club(request, club_id):
 
 # Delete a Club
 @api_view(['DELETE'])
-
+@user_types_required('adminstrateur')
 def delete_club(request, club_id):
     club = get_object_or_404(Club, id_club=club_id)
     if request.method == 'DELETE':
@@ -289,7 +385,7 @@ def get_club_evenement_publications(request, club_id):
 
 # Add a publication of type 'evenement' to a club
 @api_view(['POST'])
-
+@user_types_required('editeur')
 def add_evenement_publication_to_club(request, club_id):
     club = get_object_or_404(Club, id_club=club_id)
     if request.method == 'POST':
@@ -305,7 +401,7 @@ def add_evenement_publication_to_club(request, club_id):
 
 # Update a Member
 @api_view(['PUT'])
-
+@user_types_required('editeur')
 def update_member(request, member_id):
     member = get_object_or_404(MembreClub, id_membre=member_id)
     if request.method == 'PUT':
@@ -317,6 +413,7 @@ def update_member(request, member_id):
 
 # Delete a Member
 @api_view(['DELETE'])
+@user_types_required('adminstrateur')
 def delete_member(request, member_id):
     member = get_object_or_404(MembreClub, id_membre=member_id)
     if request.method == 'DELETE':
@@ -343,7 +440,7 @@ def get_clubs_by_name(request, name):
 
 
 @api_view(['POST'])
-
+@user_types_required('directeur_relex')
 def add_partenaire(request):
    if request.method == 'POST':
         if isinstance(request.data, list):  # If data is an array
@@ -387,6 +484,7 @@ def post_demande_partenariat(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET'])
+@user_types_required('directeur_relex')
 def get_all_demande_partenariat(request):
     if request.method == 'GET':
         demandes = Demande_Partenariat.objects.all()
@@ -395,6 +493,7 @@ def get_all_demande_partenariat(request):
 
 
 @api_view(['PUT'])
+@user_types_required('directeur_relex')
 def accepter_demande_partenariat(request):
     demande_id = request.query_params.get('id')
     if demande_id is None:
@@ -416,6 +515,7 @@ def accepter_demande_partenariat(request):
 
 
 @api_view(['PUT'])
+@user_types_required('directeur_relex')
 def refuser_demande_partenariat(request):
     demande_id = request.query_params.get('id')
     if demande_id is None:
@@ -442,6 +542,7 @@ def add_devis(request):
 
 
 @api_view(['POST'])
+@user_types_required('directeur_relex')
 def valider_devis(request):
     devis_id = request.query_params.get('devis_id')
     if devis_id is None:
@@ -458,52 +559,75 @@ def valider_devis(request):
 
 
 @api_view(['GET'])
+@user_types_required('directeur_relex')
 def get_all_devis(request):
     if request.method == 'GET':
         queryset = Devis.objects.all()
         serializer = DevisSerializer(queryset, many=True)
         return Response(serializer.data)
 
-@api_view(['GET', 'POST'])
-
-def partenaire_labo_list(request):
-    if request.method == 'GET':
-        queryset = Partenaire_labo.objects.all()
-        serializer = Partenaire_laboSerializer(queryset, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
+@api_view(['POST'])
+@user_types_required('adminstrateur')
+def add_partenaire_labo(request):
+    if  request.method == 'POST':
         serializer = Partenaire_laboSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
+def partenaire_labo_list(request):
+    if request.method == 'GET':
+        queryset = Partenaire_labo.objects.all()
+        serializer = Partenaire_laboSerializer(queryset, many=True)
+        return Response(serializer.data)      
+
+
+@api_view(['GET'])
 def laboratoire_list(request):
     if request.method == 'GET':
         queryset = Laboratoire.objects.all()
         serializer = LaboratoireSerializer(queryset, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+
+
+@api_view([ 'POST'])
+@user_types_required('adminstrateur')
+def add_laboratoire(request):
+   
+    if request.method == 'POST':
         serializer = LaboratoireSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-@api_view(['GET', 'POST'])
-def chercheur_list(request):
-    if request.method == 'GET':
-        queryset = Utilisateur.objects.filter(is_chercheur=True)
-        serializer = UtilisateurSerializer(queryset, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
+
+
+
+
+
+@api_view(['POST'])
+@user_types_required('adminstrateur')
+def add_chercheur(request):
+    
+    if request.method == 'POST':
         serializer = UtilisateurSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
+
+
+@api_view(['GET'])
+def chercheur_list(request):
+    if request.method == 'GET':
+        queryset = Utilisateur.objects.filter(is_chercheur=True)
+        serializer = UtilisateurSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
 
 
 # @api_view(['GET', 'POST'])
@@ -515,11 +639,11 @@ def chercheur_list(request):
 #     elif request.method == 'POST':
 #         serializer = Equipe_ProjetSerializer(data=request.data)
 #         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=201)
+#             serializer.save()     
+#             return Response(serializer.data, status=201)           
 #         return Response(serializer.errors, status=400)
     
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def equipe_projet_list(request):
     if request.method == 'GET':
         # Assuming you want to filter equipe by authenticated Chercheur
@@ -529,7 +653,13 @@ def equipe_projet_list(request):
             return Response(serializer.data)
         else:
             return Response("You are not authorized to access this resource.", status=status.HTTP_403_FORBIDDEN)
-    elif request.method == 'POST':
+    
+
+
+@api_view([ 'POST'])
+@user_types_required('adminstrateur')
+def add_equipe_projet(request):
+    if request.method == 'POST':
         # You can add authorization logic here if required
         serializer = Equipe_ProjetSerializer(data=request.data)
         if serializer.is_valid():
@@ -537,39 +667,49 @@ def equipe_projet_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
-@api_view(['GET', 'POST'])
-def equipe_recherche_list(request):
-    if request.method == 'GET':
-        queryset = Equipe_Recherche.objects.all()
-        serializer = Equipe_RechercheSerializer(queryset, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
+
+@api_view(['POST'])
+@user_types_required('adminstrateur')
+def add_equipe_recherche(request):
+   if request.method == 'POST':
         serializer = Equipe_RechercheSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-@api_view(['GET', 'POST'])
-def projet_list(request):
+
+@api_view(['GET'])
+def equipe_recherche_list(request):
     if request.method == 'GET':
-        queryset = Projet.objects.all()
-        serializer = ProjetSerializer(queryset, many=True)
+        queryset = Equipe_Recherche.objects.all()
+        serializer = Equipe_RechercheSerializer(queryset, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    
+
+@api_view(['POST'])
+@user_types_required('editeur')
+def add_projet(request):
+   if request.method == 'POST':
         serializer = ProjetSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-@api_view(['GET', 'POST'])
-def theme_recherche_list(request):
+@api_view(['GET'])
+
+def projet_list(request):
     if request.method == 'GET':
-        queryset = Theme_Recherche.objects.all()
-        serializer = Theme_RechercheSerializer(queryset, many=True)
+        queryset = Projet.objects.all()
+        serializer = ProjetSerializer(queryset, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+   
+
+@api_view(['POST'])
+@user_types_required('adminstrateur')
+def add_theme_recherche(request):
+   if request.method == 'POST':
         serializer = Theme_RechercheSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -577,21 +717,189 @@ def theme_recherche_list(request):
         return Response(serializer.errors, status=400)
 
 
+@api_view(['GET'])
+def theme_recherche_list(request):
+    if request.method == 'GET':
+        queryset = Theme_Recherche.objects.all()
+        serializer = Theme_RechercheSerializer(queryset, many=True)
+        return Response(serializer.data)
+   
+
+
+@api_view(['POST'])
+def PoserQuestion( request):
+     serializer = QuestionSerializer(data=request.data)
+     if serializer.is_valid():
+            serializer.save(auteur=request.user)  
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view([ 'POST'])
+@user_types_required('adminstrateur')
+def RepondreQuestion( request, question_id):
+        question = Question.objects.get(pk=question_id)
+        serializer = ReponseSerializer(data=request.data)
+        if serializer.is_valid():
+           serializer.save( question=question)
+           return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view([ 'GET'])
+def GetQuestions(request, category):
+     questions = Question.objects.filter(category=category)
+     data = []
+     for question in questions:
+        reponses = Reponse.objects.filter(question=question)
+        reponses_data = []
+        for reponse in reponses:
+            reponses_data.append({
+                'reponse_texte': reponse.contenu,
+            })
+        data.append({
+            'question': question.contenu,
+            'reponses': reponses_data
+        })
+     return Response(data)
 
 
 
 
 
+@api_view(['POST'])
+@user_types_required('adminstrateur')
+def add_annuaire(request):
+    if request.method == 'POST':
+        category = request.data.get('category')
+        if category == 'admin':
+            serializer = AdministrationAnnuaireSerializer(data=request.data)
+        elif category == 'enseignant':
+            serializer = EnseignantAnnuaireSerializer(data=request.data)
+        elif category == 'alumnie':
+            serializer = AlumnieAnnuaireSerializer(data=request.data)
+        else:
+            return Response("Invalid category", status=status.HTTP_400_BAD_REQUEST)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET'])
+def get_all_annuaire(request):
+    annuaires = Annuaire.objects.all()
+    serializer = AnnuaireSerializer(annuaires, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_Annuaire(request, pk):
+    try:
+        entry = Annuaire.objects.get(pk=pk)
+        serializer = AnnuaireSerializer(entry)
+        return Response(serializer.data)
+    except Annuaire.DoesNotExist:
+        return Response("Entry not found", status=status.HTTP_404_NOT_FOUND)
 
 
 
 
 
+@api_view(['PUT'])
+@user_types_required('adminstrateur')
+def edit_Annuaire(request, pk):
+    try:
+        entry = Annuaire.objects.get(pk=pk)
+        if request.method == 'PUT':
+            serializer = AnnuaireSerializer(entry, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Annuaire.DoesNotExist:
+        return Response("Entry not found", status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE'])
+@user_types_required('adminstrateur')
+def delete_Annuaire(request, pk):
+    try:
+        entry = Annuaire.objects.get(pk=pk)
+        if request.method == 'DELETE':
+            entry.delete()
+            return Response("Entry deleted successfully", status=status.HTTP_204_NO_CONTENT)
+    except Annuaire.DoesNotExist:
+        return Response("Entry not found", status=status.HTTP_404_NOT_FOUND)
 
 
 
+@api_view(['GET'])
+def filter_enseignant_by_grade_and_mot_cle(request):
+    grade = request.query_params.get('grade')
+    mot_cle = request.query_params.get('mot_cle')
+    if grade and mot_cle:
+        enseignants = Enseignant_Annuaire.objects.filter(grade=grade, mot_cle__icontains=mot_cle)
+    elif grade:
+        enseignants = Enseignant_Annuaire.objects.filter(grade=grade)
+    elif mot_cle:
+        enseignants = Enseignant_Annuaire.objects.filter(mot_cle__icontains=mot_cle)
+    else:
+        enseignants = Enseignant_Annuaire.objects.all()  
+    serializer = EnseignantAnnuaireSerializer(enseignants, many=True)
+    return Response(serializer.data)
 
 
+@api_view(['GET'])
+def filter_administration_by_mot_cle_and_service(request):
+    service= request.query_params.get('service')
+    mot_cle = request.query_params.get('mot_cle')
+    if service and mot_cle:
+        admin = Administration_Annuaire.objects.filter(service=service, mot_cle__icontains=mot_cle)
+    elif service :
+        admin = Administration_Annuaire.objects.filter(service=service)
+    elif mot_cle:
+        admin = Administration_Annuaire.objects.filter(mot_cle__icontains=mot_cle)
+    else:
+        admin = Administration_Annuaire.objects.all()  
+    serializer = AdministrationAnnuaireSerializer(admin, many=True)
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+def filter_alumnie_by_promotion(request):
+    promotion= request.query_params.get('promotion')
+    mot_cle = request.query_params.get('mot_cle')
+    if promotion and mot_cle:
+        Alumnie = Alumnie_Annuaire.objects.filter(promotion=promotion, mot_cle__icontains=mot_cle)
+    elif promotion :
+        Alumnie = Alumnie_Annuaire.objects.filter(promotion=promotion)
+    elif mot_cle:
+        Alumnie = Alumnie_Annuaire.objects.filter(mot_cle__icontains=mot_cle)
+    else:
+        Alumnie= Alumnie_Annuaire.objects.all()  
+    serializer = AlumnieAnnuaireSerializer(Alumnie, many=True)
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+def get_all_grades(request):
+    grades_set = set(choice[1] for choice in Enseignant_Annuaire.GRADE_CHOICES)
+    grades_list = list(grades_set)
+    return Response({'grades': grades_list})
+
+
+@api_view(['GET'])
+def get_all_promotions(request):
+    promotions = Alumnie_Annuaire.objects.values_list('promotion', flat=True).distinct()
+    return Response({'promotions': promotions})
+
+@api_view(['GET'])
+def get_all_services(request):
+    services = Administration_Annuaire.objects.values_list('service', flat=True).distinct()
+    return Response({'services': services})
 
 
 

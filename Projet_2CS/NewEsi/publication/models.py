@@ -38,7 +38,16 @@ class Equipe_Recherche(models.Model):
     theme=models.CharField(max_length=255, default='')
     def __str__(self):
         return self.nom
-    
+
+ 
+
+class Categorie(models.Model):
+    id_categorie = models.AutoField(primary_key=True)
+    nom = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nom
+
 class Utilisateur(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=254, default="", unique=True)
     family_name = models.CharField(max_length=254, null=True, blank=True)
@@ -55,7 +64,8 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
     is_responsable_fablab=models.BooleanField(default=False)
     is_directeur_relex=models.BooleanField(default=False)
     equipeRecherche = models.ForeignKey(Equipe_Recherche, related_name='chercheurs', on_delete=models.CASCADE, null=True, blank=True)
-
+    Categorie=models.ManyToManyField(Categorie,  related_name="categorie")
+    #categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='publications',default=1)
     contact = models.IntegerField(null=True, blank=True)
     objects = UserManager()  
     USERNAME_FIELD = 'email'
@@ -97,15 +107,7 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
 
 
 
-    
-
-'''class Categorie(models.Model):
-    id_categorie = models.AutoField(primary_key=True)
-    nom = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.nom'''
-
+   
 
 #club
 
@@ -141,11 +143,11 @@ class Publication(models.Model):
     date_debut = models.DateTimeField(null=True, blank=True)
     date_fin = models.DateTimeField(null=True, blank=True)
     date_publication = models.DateTimeField(null=True, blank=True)
-    #category = models.ForeignKey(Categorie, on_delete=models.CASCADE)#if category gets deleted all post gets deleted 
+    #categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE)#if category gets deleted all post gets deleted 
     #I don't think it should be a class by it's own if we won't change the class frequently
-    category=models.CharField(max_length=50)
+    # category=models.CharField(max_length=50)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='publications',null=True)
-
+    publisher = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='publications')
     def __str__(self):
         return self.titre
 
@@ -199,7 +201,7 @@ class Equipe_Projet(models.Model):
         return self.nom
     
 class Theme_Recherche(models.Model):
-    id_theme = models.IntegerField(primary_key=True)
+    id_theme = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     description = models.TextField()
     # projets=models.ManyToManyField(Projet,related_name= "themes")
@@ -209,7 +211,7 @@ class Theme_Recherche(models.Model):
 
 
 class Projet(models.Model):
-    id_projet = models.IntegerField(primary_key=True)
+    id_projet = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     description = models.TextField()
     equipe_projet = models.ForeignKey(Equipe_Projet, on_delete=models.CASCADE)
@@ -274,3 +276,54 @@ class Partenaire(models.Model):
     
 
 
+
+
+
+#forum
+class Question(models.Model):
+    category=models.CharField(max_length=50)
+    auteur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE)
+    titre = models.CharField(max_length=255)
+    contenu = models.TextField()
+    date_creation = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.contenu
+
+
+class Reponse(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    contenu = models.TextField()
+    date_creation = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.contenu
+
+
+class Annuaire(models.Model):
+    nom = models.CharField(max_length=255)
+    prenom = models.CharField(max_length=255)  
+    description = models.TextField()
+    contact = models.IntegerField(null=True, blank=True)
+    email = models.EmailField(max_length=255)
+    photo = models.ImageField(upload_to='annuaire_photos/', null=True, blank=True)
+    linkedin = models.URLField(max_length=200, blank=True, null=True)
+    mot_cle = models.CharField(max_length=100, blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.nom} {self.prenom}"
+
+class Administration_Annuaire(Annuaire):
+    CATEGORY = 'admin'
+    service = models.CharField(max_length=100, blank=True)
+
+class Enseignant_Annuaire(Annuaire):
+    CATEGORY = 'enseignant'
+    GRADE_CHOICES = [
+        ('professeur', 'Professeur'),
+        ('maître de conférences A', 'Maître de conférences A'),
+        ('maître de conférences B', 'Maître de conférences B'),
+    ]
+    grade = models.CharField(max_length=50, choices=GRADE_CHOICES, blank=True)
+
+class Alumnie_Annuaire(Annuaire):
+    CATEGORY = 'alumnie'
+    promotion = models.IntegerField(blank=True)

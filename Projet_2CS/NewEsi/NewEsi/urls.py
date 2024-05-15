@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from publication.views import *
-
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', get_all_users, name='get_all_users'),  # URL for getting all users and creating new users
@@ -29,6 +30,7 @@ urlpatterns = [
     path('publication/', get_all_publications, name='get_all_publications'),
     path('publication/add/', add_publication, name='add_publication'),
     path('publication/validate/<int:pk>/', validate_publication, name='validate_publication'),
+    path('publication/refuse/<int:pk>/', refuse_publication, name='validate_publication'),
     path('publication/<int:pk>/', edit_publication, name='edit_publication'),
     path('publication/search/',search_publication,name='search_publication'),
     path('publication/delete/<int:pk>/', delete_publication, name='delete_publication'),
@@ -43,13 +45,28 @@ urlpatterns = [
     path('Devis/demande',add_devis,name='add_devis'),
     path('Devis',get_all_devis,name='get_all_devis'),
     path('chercheur',chercheur_list,name='chercheur'),
+
     path('partenair_labo',partenaire_labo_list,name='partenaire_labo_list'),
+    path('add_partenair_labo',add_partenaire_labo,name='add_partenaire_labo'),
+
     path('labos',laboratoire_list,name='laboratoire_list'),
+    path('add_laboratoire',add_laboratoire,name='add_laboratoire'),
+    
+
     path('equipe_recherche',equipe_recherche_list,name='equipe_recherche_list'),
+    # path('add_equipe',add_equipe,{'formset': "EquipeFormSet"},name="ajouter_equipe"),
     path('chercheur',chercheur_list,name='chercheur'),
+    path('chercheur/add',add_chercheur,name='add_chercheur'),
+
     path('equipe_projet',equipe_projet_list,name='equipe_projet'),
+    path('equipe_projet/add',add_equipe_projet,name='add_equipe_projet'),
+
     path('theme',theme_recherche_list,name='theme'),
+    path('theme/add',add_theme_recherche,name='add_theme_recherche'),
+
     path('project',projet_list,name='project'),
+    path('project/add',add_projet,name='add_projet'),
+
     path('club/<int:club_id>/', get_club_members, name='get_club_members'),
     path('club/<int:club_id>/add_member/', add_club_member, name='add_club_member'),
     path('club/<int:club_id>/update/', update_club, name='update_club'),
@@ -61,4 +78,26 @@ urlpatterns = [
     path('club/<int:club_id>/evenement_publications/', get_club_evenement_publications, name='get_club_evenement_publications'),
     path('club/<int:club_id>/add_evenement_publication/', add_evenement_publication_to_club, name='add_evenement_publication_to_club'),
     path('', include('AppFablab.urls')),
-]
+        path('poser-question/', PoserQuestion, name='poser_question'),
+    path('repondre-question/<int:question_id>/', RepondreQuestion, name='repondre_question'),
+    path('questions/<str:category>', GetQuestions, name='GetQuestions'),
+    path('annuaire/', get_all_annuaire , name='get_all_directory_entries'),
+    path('annuaire/add/',add_annuaire, name='add_directory_entry'),
+    path('annuaire/<int:pk>/', get_Annuaire, name='get_directory_entry'),
+    path('annuaire/edit/<int:pk>/', edit_Annuaire, name='edit_directory_entry'),
+    path('annuaire/delete/<int:pk>/', delete_Annuaire, name='delete_directory_entry'),
+    path('annuaire/enseignant/filter/', filter_enseignant_by_grade_and_mot_cle, name='filter_enseignant'),
+    path('annuaire/administration/filter/', filter_administration_by_mot_cle_and_service, name='filter_administration'),
+    path('annuaire/alumnie/filter/', filter_alumnie_by_promotion, name='filter_alumnie'),
+    path('annuaire/grades/', get_all_grades, name='get_all_grades'),
+    path('annuaire/promotions/', get_all_promotions, name='get_all_promotions'),
+    path('annuaire/services/', get_all_services, name='get_all_services'),
+
+    path('event/add', add_event, name='add_event'),
+    
+    path('actualité/add', add_actualité, name='add_actualité'),
+    path('categorie/add', create_categorie, name='create_categorie'),
+    path('delete_categorie/<int:categorie_id>/', delete_categorie, name='delete_categorie'),
+
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
