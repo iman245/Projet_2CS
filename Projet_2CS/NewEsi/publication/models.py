@@ -38,7 +38,16 @@ class Equipe_Recherche(models.Model):
     theme=models.CharField(max_length=255, default='')
     def __str__(self):
         return self.nom
-    
+
+ 
+
+class Categorie(models.Model):
+    id_categorie = models.AutoField(primary_key=True)
+    nom = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nom
+
 class Utilisateur(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=254, default="", unique=True)
     family_name = models.CharField(max_length=254, null=True, blank=True)
@@ -55,7 +64,8 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
     is_responsable_fablab=models.BooleanField(default=False)
     is_directeur_relex=models.BooleanField(default=False)
     equipeRecherche = models.ForeignKey(Equipe_Recherche, related_name='chercheurs', on_delete=models.CASCADE, null=True, blank=True)
-
+    Categorie=models.ManyToManyField(Categorie,  related_name="categorie")
+    #categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, related_name='publications',default=1)
     contact = models.IntegerField(null=True, blank=True)
     objects = UserManager()  
     USERNAME_FIELD = 'email'
@@ -97,15 +107,7 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
 
 
 
-    
-
-'''class Categorie(models.Model):
-    id_categorie = models.AutoField(primary_key=True)
-    nom = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.nom'''
-
+   
 
 #club
 
@@ -141,9 +143,9 @@ class Publication(models.Model):
     date_debut = models.DateTimeField(null=True, blank=True)
     date_fin = models.DateTimeField(null=True, blank=True)
     date_publication = models.DateTimeField(null=True, blank=True)
-    #category = models.ForeignKey(Categorie, on_delete=models.CASCADE)#if category gets deleted all post gets deleted 
+    #categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE)#if category gets deleted all post gets deleted 
     #I don't think it should be a class by it's own if we won't change the class frequently
-    category=models.CharField(max_length=50)
+    # category=models.CharField(max_length=50)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='publications',null=True)
     publisher = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='publications')
     def __str__(self):

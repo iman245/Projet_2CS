@@ -96,6 +96,8 @@ urlpatterns = [
     path('event/add', add_event, name='add_event'),
     
     path('actualité/add', add_actualité, name='add_actualité'),
-  
+    path('categorie/add', create_categorie, name='create_categorie'),
+    path('delete_categorie/<int:categorie_id>/', delete_categorie, name='delete_categorie'),
+
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

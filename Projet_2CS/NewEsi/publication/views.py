@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render,get_object_or_404
-from .models import Utilisateur, Publication
+from .models import *
 from .serializer import *
 from rest_framework.views import APIView 
 from rest_framework.response import Response
@@ -38,7 +38,6 @@ def add_user(request):
 def login_user(request):
     if request.method == 'POST':
         email = request.data.get('email', None)
-
         if not email:
             return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
         if Utilisateur.objects.filter(email=email).exists():
@@ -148,6 +147,12 @@ def add_publication(request):
 def add_event(request):
     if request.method == 'POST':
         request.data['publisher'] = request.user.id
+        cat_id = request.data['categorie']
+        category = Categorie.objects.get(id=cat_id)
+        user = Utilisateur.objects.filter(is_admin=True, categorie=category).first()
+        if user is None:
+            return Response({"error": "No admin user found for this category"}, status=status.HTTP_400_BAD_REQUEST)
+        
         request.data['type_publication'] = 'event'
         request.data['etat'] = 'en attente'
         serializer = PublicationSerializer(data=request.data)
@@ -163,7 +168,7 @@ def add_event(request):
                 subject=sujet,
                 message=message,
                 from_email=settings.EMAIL_HOST_USER,
-                recipient_list=["ks_soukane@esi.dz"],   
+                recipient_list=[user.email],   
                 fail_silently=True,
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -182,6 +187,26 @@ def add_actualité(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['POST'])
+def create_categorie(request):
+    if request.method == 'POST':
+        serializer = CategorieSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+def delete_categorie(request, categorie_id):
+    try:
+        categorie = Categorie.objects.get(pk=categorie_id)
+    except Categorie.DoesNotExist:
+        return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+    categorie.delete()
+    return Response({"success": "Category deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
 def search_publication(request):

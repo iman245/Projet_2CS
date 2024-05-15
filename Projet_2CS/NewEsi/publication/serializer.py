@@ -1,6 +1,6 @@
 # serializers.py
 from rest_framework import serializers
-from .models import Utilisateur,Publication , Token ,MembreClub,Club , Partenaire , Demande_Partenariat, Devis, Partenaire_labo, Laboratoire, Equipe_Recherche, Equipe_Projet, Projet, Theme_Recherche , Administration_Annuaire , Annuaire , Alumnie_Annuaire , Enseignant_Annuaire , Question, Reponse
+from .models import Categorie, Utilisateur,Publication , Token ,MembreClub,Club , Partenaire , Demande_Partenariat, Devis, Partenaire_labo, Laboratoire, Equipe_Recherche, Equipe_Projet, Projet, Theme_Recherche , Administration_Annuaire , Annuaire , Alumnie_Annuaire , Enseignant_Annuaire , Question, Reponse
 
 class UtilisateurSerializer(serializers.ModelSerializer):
     class Meta:
@@ -125,3 +125,9 @@ class AlumnieAnnuaireSerializer(serializers.ModelSerializer):
         model = Alumnie_Annuaire
         fields = '__all__'
         
+
+
+class CategorieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categorie
+        fields = ['id_categorie', 'nom']
