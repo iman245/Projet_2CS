@@ -6,8 +6,6 @@ import { GrLinkNext } from "react-icons/gr";
 import {IoMdSearch} from "react-icons/io"
 import{IoIosArrowDown} from "react-icons/io"
 import { RxDividerVertical } from "react-icons/rx";
-import Navbar from "../../components/navbar/navbar";
-import Footer from "../../components/Footer/Footer"
 
 const pageSize = 5; 
 function Projets() {
@@ -91,9 +89,6 @@ const handleAnneeSelect = (selectedAnnee) => {
     setCurrentPage(currentPage - 1);
   };
   return (
-    <div>
-      <Navbar/>
-    
     <div className='page-container'>
      <div className='hero-container'>
     <RxDividerVertical className='first-icon'/>
@@ -184,8 +179,6 @@ const handleAnneeSelect = (selectedAnnee) => {
         <span>{currentPage + 1} / {totalPages}</span>
         <button onClick={nextPage} disabled={currentPage === totalPages - 1}><FcNext /></button>
       </div>
-    </div>
-    <Footer/>
     </div>
   );
   

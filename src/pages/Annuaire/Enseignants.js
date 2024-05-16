@@ -6,8 +6,6 @@ import { FaPhone } from "react-icons/fa";
 import { MdPlace } from "react-icons/md";
 import { FcNext, FcPrevious } from "react-icons/fc"; 
 import Header from "../../components/header";
-import Navbar from '../../components/navbar/navbar';
-import Footer from '../../components/Footer/Footer'
 import '../Annuaire/Annuaire.css';
 
 const pageSize = 6; 
@@ -40,25 +38,22 @@ function Recommended() {
   };
 
   return (
-    <div>
-      <Navbar/>
-    
-    <div className='annuaire-recommended-container'>
+    <div className='recommended-container'>
       <Header />
 
-      <div className='annuaire-sidebar'>
-                <div className='annuaire-search'>
-                    <input type="text" className='annuaire-search-bar' placeholder="Rechercher par un mot clé" />
+      <div className='sidebar'>
+                <div className='search'>
+                    <input type="text" className='search-bar' placeholder="Rechercher par un mot clé" />
                     <IoMdSearch color='white' size={25} style={{ position: 'relative', top: '12', right: '15' }} />
                 </div>
-                <div className="annuaire-search">
-                    <span className='annuaire-search-bar'>Grades</span>
+                <div className="search">
+                    <span className='search-bar'>Grades</span>
                     <IoIosArrowDown
                         color='white' size={25} style={{ position: 'relative', top: '12', right: '15', cursor: 'pointer' }}
                         onClick={toggleMenu}
                     />
                     {showMenu && (
-                        <ul className="annuaire-submenu">
+                        <ul className="submenu">
                             <li>Option 1</li>
                             <li>Option 2</li>
                             <li>Option 3</li>
@@ -67,29 +62,29 @@ function Recommended() {
                 </div>
             </div>
 
-      <div className='annuaire-card-container'>
+      <div className='card-container'>
         {getCurrentPageCards().map((product, index) => (
-          <div key={index} className='annuaire-card'>
+          <div key={index} className='card'>
             <img src={product.img} alt={product.title} />
-            <div className='annuaire-card-details'>
-              <h3 className='annuaire-title'>{product.title}</h3>
-              <section className='annuaire-card-review'>
+            <div className='card-details'>
+              <h3 className='title'>{product.title}</h3>
+              <section className='card-review'>
                 <span>{product.profession}</span>
               </section>
-              <section className='annuaire-card-reviews'>
-                <div className='annuaire-icon-circle'>
+              <section className='card-reviews'>
+                <div className='icon-circle'>
                   <GoMail style={{ marginRight: '6px' }} />
                 </div>
                 <span>{product.email}</span>
               </section>
-              <section className='annuaire-card-reviews'>
-                <div className='annuaire-icon-circle'>
+              <section className='card-reviews'>
+                <div className='icon-circle'>
                   <FaPhone style={{ marginRight: '6px' }} />
                 </div>
                 <span>{product.tel}</span>
               </section>
-              <section className='annuaire-card-reviews'>
-                <div className='annuaire-icon-circle'>
+              <section className='card-reviews'>
+                <div className='icon-circle'>
                   <MdPlace size={34} style={{ marginRight: '6px' }} />
                 </div>
                 <span>{product.adr}</span>
@@ -99,15 +94,12 @@ function Recommended() {
         ))}
       </div>
 
-      <div className='annuaire-pagination'>
+      <div className='pagination'>
         <button onClick={prevPage} disabled={currentPage === 0}><FcPrevious /></button>
         <span>{currentPage + 1} / {totalPages}</span>
         <button onClick={nextPage} disabled={currentPage === totalPages - 1}><FcNext /></button>
       </div>
     </div>
-    </div>
-    
-
   );
 }
 
