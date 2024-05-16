@@ -1,14 +1,15 @@
 import './App.css';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import LandingPage from './pages/LandingPage/LandingPage';
-import Evenements from './pages/EventsPage/Evenements';
-import Authentification from './pages/Authentification/Authentification';
 import Annuaire from './pages/Annuaire/Annuaire';
 import Enseignants from'./pages/Annuaire/Enseignants'
 import Alumni from './pages/Annuaire/Alumni';
 import Projets from './pages/Lmcs/Projets';
 import Equipe from './pages/Lmcs/Equipe';
-import Sidebar from './components/SidebarAdmin/Sidebar';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LandingPage from './pages/LandingPage/LandingPage';
+import Evenements from './pages/EventsPage/Evenements';
+import Authentification from './pages/Authentification/Authentification';
+
+import sidebar from './components/SidebarAdmin/Sidebar';
 import Clubs from './pages/Clubs/Clubs';
 
 import AvantPromo from './pages/AvantPromo/index'
@@ -25,6 +26,16 @@ import Contact from './pages/ContactRelex/Contact';
 import ProgrammeFinal from './pages/Programme/ProgrammeFinal';
 import DetailsPgme from './pages/DetailsPgme/DetailsPgme';
 import Specialites from './pages/Specialites/Specialites';
+// import ClubsFinal from './pages/ClubsFinal/ClubsFinal';
+
+
+// import Postgraduation from './Pages/Postgraduation/Postgraduation'
+
+
+  
+  
+    
+// =======
 
 function App() {
   return (
@@ -34,12 +45,12 @@ function App() {
         <Route path='/' element={<LandingPage/>}></Route>
         <Route path='/EventList' element={<Evenements/>}></Route>
         <Route path='/Auth' element={<Authentification/>}></Route>
-        < Route path ="/AnnuaireAdmin" element ={<Annuaire/>}/>
-        < Route path ="/AnnuaireEnseignants" element={<Enseignants/> }/>
-        < Route path ="/AnnuaireAlumni" element ={<Alumni/>}/>
+        < Route path ="/Annuaire/Administration" element ={<Annuaire/>}/>
+        < Route path ="/Annuaire/Enseignants" element={<Enseignants/> }/>
+        < Route path ="/Annuaire/Alumni" element ={<Alumni/>}/>
         < Route path ="/LMCSProjects" element ={<Projets/>}/>
         < Route path ="/LMCSTeams" element ={<Equipe/>}/>
-
+        
 
         < Route path ="/AvantPromo" element ={<AvantPromo/>}/>
         < Route path ="/CatalogueFormation" element ={<CatalogueFormation/>}/>
@@ -64,11 +75,8 @@ function App() {
       </Routes>
       </BrowserRouter>
     </div>
+
   );
 }
 
 export default App;
-/*
-<Navbar/>
-      
-*/

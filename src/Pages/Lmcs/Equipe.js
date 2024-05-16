@@ -8,19 +8,29 @@ import equipe1 from'../../Images/equipe1.png'
 import equipe2 from '../../Images/equipe2.png'
 import cardData from '../../db/Equipe.json';
 import { MdExpandMore } from "react-icons/md";
-import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
+import { FcNext, FcPrevious } from "react-icons/fc"; 
 
-const pageSize = 3;
+ const pageSize = 3;
 
 
 function Equipe() {
+    
+  
   
     const [showDetails, setShowDetails] = useState(false);
    
     const [currentPage, setCurrentPage] = useState(0);
 
+    const totalPages = Math.ceil(cardData.length / pageSize); 
+    const nextPage = () => {
+        setCurrentPage(currentPage + 1);
+      };
     
-
+    
+      const prevPage = () => {
+        setCurrentPage(currentPage - 1);
+      };
+    
 
 
   
@@ -79,49 +89,54 @@ function Equipe() {
                                     <span>{product.objectif}</span>
                                     <h3 className='equipe-titre2'>Equipe de recherche</h3>
                                     <div className='equipe-card-container'>
-                                        {getCurrentPageCard().map((product, index) => (
-                                            <div key={index} className='card'>
-                                                <img src={product.img} alt={product.title} />
-                                                <div className='card-details'>
-                                                    <h3 className='title'>{product.title}</h3>
-                                                    <section className='card-review'>
-                                                        <span>{product.profession}</span>
-                                                    </section>
-                                                    <section className='card-reviews'>
-                                                        <div className='icon-circle'>
-                                                            <GoMail style={{ marginRight: '6px' }} />
-                                                        </div>
-                                                        <span>{product.email}</span>
-                                                    </section>
-                                                    <section className='card-reviews'>
-                                                        <div className='icon-circle'>
-                                                            <FaPhone style={{ marginRight: '6px' }} />
-                                                        </div>
-                                                        <span>{product.tel}</span>
-                                                    </section>
-                                                    <section className='card-reviews'>
-                                                        <div className='icon-circle'>
-                                                            <MdPlace size={34} style={{ marginRight: '6px' }} />
-                                                        </div>
-                                                        <span>{product.adr}</span>
-                                                    </section>
+                                     {getCurrentPageCard().map((product, index) => (
+                                     <div key={index} className='card'>
+                                     <img src={product.img} alt={product.title} />
+                                    <div className='card-details'>
+                                      <h3 className='title'>{product.title}</h3>
+                                        <section className='card-review'>
+                                          <span>{product.profession}</span>
+                                         </section>
+                                         <section className='card-reviews'>
+                                          <div className='icon-circle'>
+                                         <GoMail style={{ marginRight: '6px' }} />
+                                         </div>
+                                          <span>{product.email}</span>
+                                         </section>
+                                          <section className='card-reviews'>
+                                         <div className='icon-circle'>
+                                         <FaPhone style={{ marginRight: '6px' }} />
+                                        </div>
+                                         <span>{product.tel}</span>
+                                        </section>
+                                         <section className='card-reviews'>
+                                            <div className='icon-circle'>
+                                            <MdPlace size={34} style={{ marginRight: '6px' }} />
+                                            </div>
+                                             <span>{product.adr}</span>
+                                             </section>
                                                 </div>
                                             </div>
                                         ))}
-                                      
+                
                                     </div>
                                 </>
                             )}
                             <div className='plus'>
-                                <span >Voir plus</span>
+                                <span onClick={toggleDetails}>Voir plus</span>
                                 <MdExpandMore onClick={toggleDetails} />
+
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
 
-            
+            <div className='pagination'>
+        <button onClick={prevPage} disabled={currentPage === 0}><FcPrevious /></button>
+        <span>{currentPage + 1} / {totalPages}</span>
+        <button onClick={nextPage} disabled={currentPage === totalPages - 1}><FcNext /></button>
+      </div>
         </div>
     );
 }
