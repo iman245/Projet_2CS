@@ -62,7 +62,7 @@
   }
 .equipe{
    
-    border : 1px solid #0061B1;
+    border : 1.15px solid #0061B1;
     margin-bottom:20px;
     border-radius: 8px;
     padding:15px;
@@ -88,6 +88,7 @@
     right: -810px; /* Ajustez la valeur en fonction de la distance depuis la droite */
     cursor: pointer; /* Pour indiquer qu'il s'agit d'un lien cliquable */
     color: #0061B1; /* Couleur du texte */
+    size:35px;
 }
 span{
     font: 400 15px/1.35 "Open Sans", Helvetica, Arial, serif; 
