@@ -1,13 +1,12 @@
-
-
 .lcsi-container {
   display: flex;
   flex-direction: column;
   width: 1024px;
   height: 100%;
- 
+  top:129px;
 }
-.cover {
+
+.lcsi-cover {
   position: absolute;
   top: 20px;
   right: 0px;
@@ -16,9 +15,10 @@
   width: 100%;
   height: 357px;
 }
-.hero_title {
+
+.lcsi-hero_title {
     position: absolute;
-    top: 90px;
+    top: 75px;
     right: 408px;
     bottom: 347px;
     left: 35px;
@@ -26,55 +26,56 @@
     height: 195px;
     font: 400 48px/1.35 "Open Sans", Helvetica, Arial, serif;
     color: rgb(255, 255, 255);
-  }
-  .ep1 {
+}
+
+.lcsi-ep1 {
     position: absolute;
     right: 300px; 
     top:100px;
-   
-  
-  }
-  .ep2{
+}
+
+.lcsi-ep2{
     position: absolute;
     right: 180px; 
     top:100px;
-    }
-   .ep3{
-    position: absolute;
-  right: 240px; 
-    top:195px;
-   }
+}
 
-  
-  .image {
-    position: relative;
-    width: 95%; /* Ajustement de la largeur */
-    height: auto; /* Hauteur automatique */
-    border-radius: 5px;
-    float: left; /* Alignement à gauche */
-  }
-  
-  .image1 {
+.lcsi-ep3{
     position: absolute;
-    top: 12px;
+    right: 240px; 
+    top:195px;
+}
+
+.lcsi-image {
+    position: relative;
+    width: 95%;
+    height: auto;
+    border-radius: 5px;
+    float: left;
+}
+
+.lcsi-image1 {
+    position: absolute;
+    top: 14px;
     left: 35px; 
     width: 29px;
     height: 35px;
     color:#0061B1;
-  }
-  
-  .info {
+}
+
+.lcsi-info {
     position: absolute;
-    bottom: 35px; /* Ajustez selon votre besoin */
-    left: 20px; /* Ajustez selon votre besoin */
+    bottom: 32px;
+    left: 20px;
     width: 61px;
     height: 16px;
     font: 600 12px/1.33 "Open Sans", Helvetica, Arial, serif;
     color: rgb(0, 0, 0);
-  }
-  .info2 {
+}
+
+.lcsi-info2 {
     position: absolute;
-    top: 50px;
+    top: 40px;
     right: 26px;
     bottom: 359px;
     display: flex;
@@ -84,27 +85,27 @@
     font: 600 12px/1.33 "Open Sans", Helvetica, Arial, serif;
     color: rgb(0, 0, 0);
     text-align: center;
-  }
-  
-   .rect {
+}
+
+.lcsi-rect {
     position:absolute;
     top: 350px;
     right: auto;
     bottom: 0px;
-    left:50%; /* Placer le côté gauche à 50% */
-    width: 994px;
+    left:50%;
+    width: 1000px;
     height: 252px;
-    margin-left: -497px; /* Déplacer l'élément de moitié de sa largeur vers la gauche */
+    margin-left: -497px;
     background-color: rgb(255, 255, 255);
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.247);
-  }
-  
-.medium_title {
+}
+
+.lcsi-medium_title {
   position:absolute;
-  top: 20px;
+  top: 14px;
   right:  auto;
   bottom: 232px;
-  left: 35% ;
+  left: 35%;
   display: flex;
   text-align:center;
   width: 254px;
@@ -113,9 +114,10 @@
   color: rgb(0, 97, 177);
   text-align: center;
 }
-.highlight {
+
+.lcsi-highlight {
   position: absolute;
-  top: 60px;
+  top: 48px;
   right: 111px;
   bottom: 35px;
   left: 111px;
@@ -129,20 +131,20 @@
   text-align: center;
 }
 
-.rect2 {
+.lcsi-rect2 {
   position: absolute;
   top: 630px;
   padding: 10px;
   right: 20px;
   bottom: 45px;
   left: 20px;
-  width: calc(100% - 40px); /* Occuper tout l'écran avec un décalage de 20px à gauche et à droite */
-  height: 260px; /* Hauteur de l'écran */
+  width: calc(100% - 40px);
+  height: 260px;
   background-color: rgb(0, 97, 177);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.247);
 }
 
-.rect3 {
+.lcsi-rect3 {
   position: absolute;
   top: 25px;
   left: 50%;
@@ -151,21 +153,22 @@
   height: 54px;
   background-color: rgb(255, 255, 255);
   border-radius: 0px 0px 7px 7px;
-  text-align: center; /* Centrer le contenu horizontalement */
+  text-align: center;
 }
 
-.medium_title1 {
+.lcsi-medium_title1 {
   font: 700 24px/1.37 "Open Sans", Helvetica, Arial, serif;
   color: #0061B1;
-  margin: auto; /* Centrer l'élément horizontalement */
+  margin: auto;
 }
-.ep4{
+
+.lcsi-ep4 {
   position: relative;
- left:63px;
-  top:0px;
-  
+  left: 63px;
+  top: 0px;
 }
-.hero_title2 {
+
+.lcsi-hero_title2 {
   position: absolute;
   top: 62px;
   right: 93px;
@@ -178,7 +181,8 @@
   font: 700 48px/1.35 "Open Sans", Helvetica, Arial, serif;
   color: rgb(255, 255, 255);
 }
-.hero_title21 {
+
+.lcsi-hero_title21 {
   position: absolute;
   top: 62px;
   right: 93px;
@@ -191,7 +195,8 @@
   font: 700 48px/1.35 "Open Sans", Helvetica, Arial, serif;
   color: rgb(255, 255, 255);
 }
-.paragraph {
+
+.lcsi-paragraph {
   position: absolute;
   top: 123px;
   right: 872px;
@@ -204,7 +209,8 @@
   font: 600 13px/1.38 "Open Sans", Helvetica, Arial, serif;
   color: rgb(0, 0, 0);
 }
-.paragraph1 {
+
+.lcsi-paragraph1 {
   position: absolute;
   top: 123px;
   right: 164px;
@@ -217,7 +223,8 @@
   font: 600 13px/1.38 "Open Sans", Helvetica, Arial, serif;
   color: rgb(0, 0, 0);
 }
-.image5 {
+
+.lcsi-image5 {
   position: absolute;
   top: 124px;
   right: 809px;
@@ -226,7 +233,8 @@
   width: 74px;
   height: 58px;
 }
-.image6 {
+
+.lcsi-image6 {
   position: absolute;
   top: 145px;
   right: 431px;
@@ -235,7 +243,8 @@
   width: 55px;
   height: 55px;
 }
-.hero_title3 {
+
+.lcsi-hero_title3 {
   position: absolute;
   top: 151px;
   right: 502px;
@@ -248,7 +257,8 @@
   font: 600 48px/1.35 "Open Sans", Helvetica, Arial, serif;
   color: rgb(255, 255, 255);
 }
-.paragraph2 {
+
+.lcsi-paragraph2 {
   position: absolute;
   top: 211px;
   right: 420px;
@@ -264,7 +274,8 @@
   text-align: center;
   letter-spacing: -0.1px;
 }
-.image7 {
+
+.lcsi-image7 {
   position: absolute;
   top: 122px;
   right: 119px;
@@ -274,59 +285,58 @@
   height: 52px;
 }
 
-.RECT3{
+.lcsi-RECT3 {
   position:absolute;
   top:1050px;
   left: 40px;
-
 }
-.highlight4 {
+
+.lcsi-highlight4 {
   position: absolute;
-  width: 293px;
+  width: 270px;
+  top:100px;
   height: 96px;
   font: 500 16px/1.5 "Lato", Helvetica, Arial, serif;
   color: rgb(82, 82, 82);
 }
-.box_title2 {
+
+.lcsi-box_title2 {
   position: absolute;
-  top:-130px;
+  top:-45px;
   width:451px;
   font: 600 38px/1.35 "Open Sans", Helvetica, Arial, serif;
- 
 }
 
-.hero_title_span0 {
+.lcsi-hero_title_span0 {
   font: 600 1em/1.8 "Open Sans", Helvetica, Arial, serif;
   color: black;
-  
 }
 
-.hero_title_span1 {
+.lcsi-hero_title_span1 {
   font: 600 1em/1.8 "Open Sans", Helvetica, Arial, serif;
   color: rgb(0, 97, 177);
-
 }
-.box-container {
+
+.lcsi-box-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between; /* Pour ajouter de l'espace entre les cartes */
-
+  justify-content: space-between;
 }
 
-.box {
-  flex: 0 0 calc(50% - 20px); /* Largeur de chaque carte (50% moins l'espacement) */
-  margin-bottom: 30px; /* Espacement entre les lignes */
-  position: relative; /* Position relative pour les éléments enfants positionnés absolument */
+.lcsi-box {
+  flex: 0 0 calc(50% - 20px);
+  margin-bottom: 30px;
+  position: relative;
   background-color: rgb(0, 97, 177);
   box-shadow: 20px 10px 35px 0px rgba(0, 0, 0, 0.086);
   overflow: hidden;
-  width: 180px; /* Largeur minimale */
+  width: 180px;
   height: 291px;
-  left:300px;
+  left:420px;
   top:-40px;
 }
 
-.image00 {
+.lcsi-image00 {
   position: absolute;
   top: 32px;
   right: 124px;
@@ -336,7 +346,7 @@
   height: 64px;
 }
 
-.highlight00 {
+.lcsi-highlight00 {
   position: absolute;
   top: 112px;
   right: auto;
@@ -344,61 +354,62 @@
   left: 0px;
   display: flex;
   justify-content: center;
-  width: 100%; /* Ajustez la largeur à 100% */
+  width: 100%;
   height: 28px;
   font: 600 18px/1.55 "Sora", Helvetica, Arial, serif;
   color: rgb(255, 255, 255);
   text-align: center;
 }
 
-.highlight01 {
+.lcsi-highlight01 {
   position: absolute;
   top: 171px;
   right: auto;
   bottom: auto;
-  left: 0; /* Ajustez la position à 0 */
-  width: 100%; /* Ajustez la largeur à 100% */
-  height: auto; /* Ajustez la hauteur automatiquement */
+  left: 0;
+  width: 100%;
+  height: auto;
   font: 500 16px/1.5 "Lato", Helvetica, Arial, serif;
   color: rgb(255, 255, 255);
   text-align: center;
 }
 
-.blog-container{
+.lcsi-blog-container{
   background-color:black;
-
+  /* padding:30px; */
 }
 
-.blog-cont {
-  
- 
+.lcsi-blog-cont {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  /* background-color:black; */
 }
 
-.blog {
+.lcsi-blog {
   position: relative;
   top: 1682px;
-  right: 521px;
+  /* right: 521px; */
   bottom: 37px;
-  left: 21px;
- width: calc(50% - 20px); 
-  height: 372px;
+  left: 87px;
+  width: 449px; 
+  height:372px;
   background-color:white;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
   border-radius: 16px 16px 16px 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding:30px;
-  
+ padding:17px;
+ gap:2rem;
 }
-.hero_title_blog {
+
+.lcsi-hero_title_blog {
   font: 600 50px/1.44 "Open Sans", Helvetica, Arial, serif;
   color: rgb(0, 0, 0);
 }
-.hero_title_b {
+
+.lcsi-hero_title_b {
   position: absolute;
   top: 1650px;
   right: auto;
@@ -407,27 +418,29 @@
   width: 766px;
   height: 72px;
 }
-.hero_title_blog0 {
+
+.lcsi-hero_title_blog0 {
   font: 600 1em/1.44 "Open Sans", Helvetica, Arial, serif;
   color: rgb(255, 255, 255);
 }
-.hero_title_blog1 {
+
+.lcsi-hero_title_blog1 {
   font: 600 1em/1.44 "Open Sans", Helvetica, Arial, serif;
   color: rgb(0, 97, 177);
 }
 
-.blog_subtitle {
+.lcsi-blog_subtitle {
   position: absolute;
   top: 32px;
   right: auto;
   bottom: auto;
-  
   width: 293px;
   height: 84px;
   font: 600 21px/1.33 "Sora", Helvetica, Arial, serif;
   color: rgb(0, 97, 177);
 }
-.blog_highlight {
+
+.lcsi-blog_highlight {
   position: absolute;
   top: 132px;
   right: auto;
@@ -437,7 +450,8 @@
   font: 500 16px/1.5 "Lato", Helvetica, Arial, serif;
   color: rgb(82, 82, 82);
 }
-.blog_image {
+
+.lcsi-blog_image {
   position: absolute;
   top: 32px;
   right: 31px;
@@ -446,27 +460,29 @@
   height: 278px;
   border-radius: 8px 8px 8px 8px;
 }
-.blog-like,
-.blog_vues,
-.blog_temps {
+
+.lcsi-blog-like,
+.lcsi-blog_vues,
+.lcsi-blog_temps {
   font: 500 16px/1.5 "Lato", Helvetica, Arial, serif;
   color: rgb(82, 82, 82);
   top:250px;
   position:absolute;
 }
 
-.blog_like {
-  margin-right: 10px; /* Espacement de 20px */
+.lcsi-blog_like {
+  margin-right: 10px;
 }
 
-.blog_vues {
-  margin-left: 40px; /* Espacement de 20px */
+.lcsi-blog_vues {
+  margin-left: 40px;
 }
 
-.blog_temps {
-  margin-left: 90px; /* Espacement de 20px */
+.lcsi-blog_temps {
+  margin-left: 90px;
 }
-.blog_more {
+
+.lcsi-blog_more {
   position: absolute;
   top:300px;
   right: auto;
@@ -478,8 +494,7 @@
   text-decoration: underline;
 }
 
-
-.image11 {
+.lcsi-image11 {
   position: absolute;
   top: 392px;
   right: 794px;
@@ -489,64 +504,40 @@
   height: 24px;
 }
 
-  .partenaire {
-    position:absolute;
-   top :2100px;
-   padding-bottom:10px;
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(255, 255, 255);
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); 
-    overflow: hidden;
-    width :100%;
-  }
-  
+.lcsi-partenaire {
+  position:absolute;
+  top :2600px;
+  padding-bottom:10px;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); 
+  overflow: hidden;
+  width :100%;
+}
 
-.flex_row {
+.lcsi-flex_row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 0px 10px;
   margin: 13px 7px 21px 25px;
-  @include xs {
-    flex-direction: column;
-    gap: 30px 10px;
-    margin: 13px 7px 21px 16px;
-  }
-  @include tn {
-    margin: 13px 7px 21px 8px;
-  }
 }
-.part {
+
+.lcsi-part {
   width: 160px;
   min-width: 0px;
   object-fit: cover;
-  @include xs {
-    margin-top: unset;
-    margin-bottom: unset;
-    width: 100%;
-    max-width: 160px;
-  }
 }
-.parte1 {
+
+.lcsi-parte1 {
   width: 148px;
   min-width: 0px;
   object-fit: cover;
-  @include xs {
-    margin-top: unset;
-    margin-bottom: unset;
-    width: 100%;
-    max-width: 148px;
-  }
 }
-.parte2 {
+
+.lcsi-parte2 {
   width: 164px;
   min-width: 0px;
   object-fit: cover;
-  @include xs {
-    margin-top: unset;
-    margin-bottom: unset;
-    width: 100%;
-    max-width: 164px;
-  }
 }

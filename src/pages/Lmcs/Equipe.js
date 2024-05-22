@@ -1,6 +1,6 @@
 import {React,useState} from 'react'
 import './Equipe.css';
-import data from '../../db/Enseignants.json';
+import data from '../../db/Administration.json'
 import { GoMail } from "react-icons/go";
 import { FaPhone } from "react-icons/fa";
 import { MdPlace } from "react-icons/md";
@@ -9,6 +9,8 @@ import equipe2 from '../../Images/equipe2.png'
 import cardData from '../../db/Equipe.json';
 import { MdExpandMore } from "react-icons/md";
 import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
+import Navbar from "../../components/navbar/navbar";
+import Footer from "../../components/Footer/Footer"
 
 const pageSize = 3;
 
@@ -19,27 +21,15 @@ function Equipe() {
    
     const [currentPage, setCurrentPage] = useState(0);
 
-    
+    // const toggleDetails = () => {
+    //     setShowDetails(!showDetails);
+    // };
 
+    const [expandedIndex, setExpandedIndex] = useState(null);
 
-
-  
-   
-
-  
-
-
-
-
-
-
-
-
-    const toggleDetails = () => {
-        setShowDetails(!showDetails);
+    const toggleDetails = (index) => {
+        setExpandedIndex(index === expandedIndex ? null : index);
     };
-
-   
 
     const getCurrentPageCard = () => {
         const startIndex = currentPage * pageSize;
@@ -54,6 +44,9 @@ function Equipe() {
     };
 
     return (
+    <div>
+        <Navbar/>
+   
         <div className='equipe-container'>
             <div className='first-section'>
                 <img className='back-image' src={equipe1} alt="alt text" />
@@ -71,7 +64,7 @@ function Equipe() {
                             <h2 className='equipe-titre'>{product.theme}</h2>
                             <h3 className='equipe-titre2'>Axes de recherche</h3>
                             <span>{product.Axes}</span>
-                            {showDetails && (
+                            {expandedIndex === index && (
                                 <>
                                     <h3 className='equipe-titre2'>Problèmatique</h3>
                                     <span>{product.Problematique}</span>
@@ -80,27 +73,27 @@ function Equipe() {
                                     <h3 className='equipe-titre2'>Equipe de recherche</h3>
                                     <div className='equipe-card-container'>
                                         {getCurrentPageCard().map((product, index) => (
-                                            <div key={index} className='card'>
+                                            <div key={index} className='lmcs-card'>
                                                 <img src={product.img} alt={product.title} />
-                                                <div className='card-details'>
-                                                    <h3 className='title'>{product.title}</h3>
-                                                    <section className='card-review'>
+                                                <div className='annuaire-card-details'>
+                                                    <h3 className='annuaire-title'>{product.title}</h3>
+                                                    <section className='annuaire-card-review'>
                                                         <span>{product.profession}</span>
                                                     </section>
-                                                    <section className='card-reviews'>
-                                                        <div className='icon-circle'>
+                                                    <section className='annuaire-card-reviews'>
+                                                        <div className='annuaire-icon-circle'>
                                                             <GoMail style={{ marginRight: '6px' }} />
                                                         </div>
                                                         <span>{product.email}</span>
                                                     </section>
-                                                    <section className='card-reviews'>
-                                                        <div className='icon-circle'>
+                                                    <section className='annuaire-card-reviews'>
+                                                        <div className='annuaire-icon-circle'>
                                                             <FaPhone style={{ marginRight: '6px' }} />
                                                         </div>
                                                         <span>{product.tel}</span>
                                                     </section>
-                                                    <section className='card-reviews'>
-                                                        <div className='icon-circle'>
+                                                    <section className='annuaire-card-reviews'>
+                                                        <div className='annuaire-icon-circle'>
                                                             <MdPlace size={34} style={{ marginRight: '6px' }} />
                                                         </div>
                                                         <span>{product.adr}</span>
@@ -112,16 +105,17 @@ function Equipe() {
                                     </div>
                                 </>
                             )}
-                            <div className='plus'>
-                                <span >Voir plus</span>
-                                <MdExpandMore onClick={toggleDetails} />
-                            </div>
+                          <div className='plus' onClick={() => toggleDetails(index)}>
+                          <span>Voir plus</span>
+                          <MdExpandMore style={{ transform: expandedIndex === index ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+                          </div>
+
                         </div>
                     </div>
                 ))}
             </div>
-
-            
+<Footer/>
+            </div>
         </div>
     );
 }

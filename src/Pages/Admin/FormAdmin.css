@@ -1,0 +1,263 @@
+
+
+.AdminRoot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  height: 75%;
+  min-height: 673px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px 8px 8px 8px;
+  outline: 1px solid rgb(255, 255, 255);
+  outline-offset: -1px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.247);
+  overflow: hidden;
+}
+
+.AdminIconCircle {
+    position: absolute;
+    top: 43px;
+    right: 992px;
+    bottom: 542px;
+    left: 30px;
+    width: 48px; /* Taille du cercle */
+    height: 48px; /* Taille du cercle */
+    background-color: #F5F5F5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .AdminImage1 {
+    width: 24px; /* Taille de l'icône */
+    height: 24px; /* Taille de l'icône */
+  }
+  
+  .AdminTitle {
+    position: absolute;
+    top: 29.5px;
+    right: auto;
+    bottom: auto;
+    left: 101px;
+    display: flex;
+    align-items: center;
+    width: 100px;
+    height: 38px;
+    font: 500 28.08945655822754px/1.34 "Open Sans";
+    color: rgb(0, 0, 0);
+    letter-spacing: -0.57px;
+  }
+  .AdminContainer {
+    position: absolute; /* or relative, depending on the context */
+    top: 35px; /* Adjust as needed */
+    left: 0; /* Adjust as needed */
+    width: auto;
+    height: auto;
+    padding: 20px; /* Optional: Adjust padding as needed */
+  }
+  
+  .AdminHighlight1 {
+    position: relative; /* Adjust to align properly within the container */
+    top: 50px;
+    left: 54px;
+    bottom: 20px;
+    font: 600 18px/1.38 "Open Sans", Helvetica, Arial, serif;
+    color: rgb(0, 0, 0);
+  }
+  
+  .AdminRect5 {
+    position: relative; /* Adjust to align properly within the container */
+    top: 37px; /* Adjust this to move it relative to AdminHighlight1 */
+    left: 40px;
+    width: 616px;
+    height: 60px;
+    background-color: rgba(217, 217, 217, 0);
+    border-radius: 10px;
+    border: 1px solid rgb(217, 217, 217);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .AdminInput {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0 10px;
+    font: 400 18px/1.5 "Poppins", Helvetica, Arial, serif;
+    color: rgb(157, 155, 155);
+    border-radius: 10px;
+  }
+  
+  .AdminHighlight2 {
+    display: none; /* This element is hidden as we are using the placeholder in the input */
+  }
+  .AdminDescriptionContainer {
+    position: absolute; /* or relative, depending on the context */
+    top: 170px; /* Adjust as needed */
+    left: 0; /* Adjust as needed */
+    width: auto;
+    height: auto;
+    padding: 20px; /* Optional: Adjust padding as needed */
+  }
+  
+  .AdminHighlight11 {
+    position: relative; /* Adjust to align properly within the container */
+    top: 50px;
+    left: 54px;
+    font: 600 18px/1.38 "Open Sans";
+    color: rgb(0, 0, 0);
+  }
+  
+  .AdminRect6 {
+    position: relative;
+    top: 33px;
+    left: 40px;
+    width:596px; /* Ajustez la largeur au contenu */
+    height: auto; /* Ajustez la hauteur au contenu */
+    background-color: rgba(217, 217, 217, 0);
+    border-radius: 10px;
+    border: 1px solid rgb(217, 217, 217);
+    padding: 10px; /* Ajoutez un peu de marge intérieure pour l'espace entre le texte et le bord */
+  }
+  
+  .AdminTextarea {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font: 400 18px/1.5 "Poppins", Helvetica, Arial, serif;
+    color: rgb(157, 155, 155);
+    border-radius: 10px;
+    resize: none;
+  }
+  .AdminHighlight21 {
+    display: none; /* This element is hidden as we are using the placeholder in the textarea */
+  }
+  
+ 
+
+  .AdminFileContainer {
+    top:400px;
+    left:40px;
+    position: relative;
+   
+    align-items: center;
+  }
+  
+  .AdminTextRect {
+    width: 200px; /* Définir la largeur souhaitée */
+    padding: 8px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgb(217, 217, 217);
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+  }
+  
+  
+  
+  .AdminHighlight {
+    font: 600 18px/2.1 "Open Sans", Helvetica, Arial, serif;
+    color: rgb(0, 0, 0);
+    margin-right: 10px;
+    margin-left:33px;
+  }
+  
+  .AdminText {
+    font: 400 14px/2.7 "Open Sans", Helvetica, Arial, serif;
+    color: rgb(0, 0, 0);
+    margin-right: 10px;
+   
+  }
+  
+  .AdminFileIcon svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+  }
+  
+  .AdminFileContainer h4 {
+    margin-bottom: 20px; /* Ajout */
+  }
+
+
+  .AdminTextContainer {
+    position: relative;
+    top:470px;
+    left:100px
+  }
+  
+  .AdminRect3 {
+    position: absolute;
+    top: 50%; /* Centrer verticalement */
+    left: 50%; /* Centrer horizontalement */
+    transform: translate(-50%, -50%); /* Ajuster pour le centrage */
+    width: 100px;
+    height: 25px;
+    background-color: rgb(0, 97, 177);
+    border-radius: 2px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.247);
+  }
+  
+  .AdminText1 {
+    position: absolute;
+    top: 50%; /* Centrer verticalement */
+    left: 50%; /* Centrer horizontalement */
+    transform: translate(-50%, -50%); /* Ajuster pour le centrage */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto; /* Ajuster la largeur automatiquement */
+    height: auto; /* Ajuster la hauteur automatiquement */
+    font: 400 14px/2.7 "Open Sans", Helvetica, Arial, serif;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    letter-spacing: -0.29px;
+  }
+  
+
+
+
+
+
+
+.AdminTextContainer2 {
+    position: relative;
+    top:470px;
+    left:100px
+  }
+  
+  .AdminRect4 {
+    position: absolute;
+    top: 50%; /* Centrer verticalement */
+    left: 50%; /* Centrer horizontalement */
+    transform: translate(-50%, -50%); /* Ajuster pour le centrage */
+    width: 100px;
+    height: 25px;
+    background-color: rgb(0, 97, 177);
+    border-radius: 2px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.247);
+  }
+  
+  .AdminText2 {
+    position: absolute;
+    top: 50%; /* Centrer verticalement */
+    left: 50%; /* Centrer horizontalement */
+    transform: translate(-50%, -50%); /* Ajuster pour le centrage */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto; /* Ajuster la largeur automatiquement */
+    height: auto; /* Ajuster la hauteur automatiquement */
+    font: 400 14px/2.7 "Open Sans", Helvetica, Arial, serif;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    letter-spacing: -0.29px;
+  }
+  

@@ -38,7 +38,7 @@
     text-underline-offset: 0.3em; 
 }
 
-.lien: active {
+.lien:active {
     color: inherit; 
     text-decoration-color: #0061B1; 
    

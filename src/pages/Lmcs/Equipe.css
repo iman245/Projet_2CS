@@ -7,6 +7,10 @@
   height: 326px;
   min-height: 326px;
 }
+.first-section{
+    position: relative;
+    top:-9px;
+}
 .back-image {
     position: absolute;
     top: 20px;
@@ -53,12 +57,9 @@
 .equipe-con {
     position:'absolute';
     display: flex;
-    flex-direction: column; /* Afficher les équipes en colonne */
-    /* align-items: center;  */
-    margin-top: 400px; /* Ajouter un espacement au-dessus du conteneur */
-   
-    margin-left: 40px; /* Ajouter un espacement intérieur */
-    /* margin-right:20px */
+    flex-direction: column;
+    margin-top: 400px; 
+    margin-left: 40px; 
   }
 .equipe{
    
@@ -73,22 +74,26 @@
 .equipe-titre{
     color:#0061B1;
     padding-bottom:10px;
-    font: 400 25px/1.35 "Open Sans", Helvetica, Arial, serif;
+    font: 400 25px/1.35 "Open Sans";
 }
 .equipe-titre2 {
     font-weight: bold;
     padding-bottom:10px;
-    font: 400 22px/1.35 "Open Sans", Helvetica, Arial, serif;
+    font: 400 22px/1.35 "Open Sans";
 }
 
 
 .plus {
-    position:relative;
-    bottom: -15px; /* Ajustez la valeur en fonction de la distance depuis le bas */
-    right: -810px; /* Ajustez la valeur en fonction de la distance depuis la droite */
-    cursor: pointer; /* Pour indiquer qu'il s'agit d'un lien cliquable */
-    color: #0061B1; /* Couleur du texte */
+    position: relative; /* Positionnement absolu par rapport à equipe */
+    bottom: -10px; /* Aligner en bas */
+    right: 10px; /* Aligner à droite */
+    padding: 10px; /* Ajouter un peu d'espace autour du contenu */
+  
+    border-radius: 0 0 8px 8px; /* Coins arrondis en bas */
+    cursor: pointer;
+    color: #0061B1;
 }
+
 span{
     font: 400 15px/1.35 "Open Sans", Helvetica, Arial, serif; 
 }
@@ -128,20 +133,22 @@ span{
     margin-right:auto;
     margin-top:1rem;
     z-index:-2;
+   
 }
-.card {
+.lmcs-card {
     margin: 8px;
     border: 2px solid #ededed;
     padding: 15px;
     cursor: pointer;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    height: 350px;
+    height: 345px;
     display: flex;
     flex-direction: column; 
-    width:30%;
+    width:27%;
 }
-.card > img {
+
+.lmcs-card > img {
     width:11rem;
     max-width: 100%; 
     max-height: 150px; 
@@ -152,26 +159,25 @@ span{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-
-
-.title{
+.annuaire-title{
     margin-bottom:0.15rem;
     color:#0061B1;
     text-align:center;
 
 }
-.card-reviews{
+
+.annuaire-card-reviews{
     margin-bottom:0.5rem;
     display:fex;
     gap:0.5rem;
 }
 
-.card-review{
+.annuaire-card-review{
     text-align:center;
     margin-bottom:0.10rem;
 }
-.icon-circle {
+
+.annuaire-icon-circle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -182,14 +188,14 @@ span{
     margin-right: 5px; 
 }
 
-.icon-circle svg {
+.annuaire-icon-circle svg {
     color: white; 
     width:1000%;
     height:50%;
     padding-left:5px;
-    /* padding-bottom:2px; */
-    
 }
+
+
 .image-container {
     display: flex; 
     justify-content: center; 
