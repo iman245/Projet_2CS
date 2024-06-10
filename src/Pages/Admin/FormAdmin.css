@@ -4,8 +4,9 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 75%;
-  height: 75%;
+  width: 65%;
+  height: 65%;
+  left:390px;
   min-height: 673px;
   background-color: rgb(255, 255, 255);
   border-radius: 8px 8px 8px 8px;
@@ -50,48 +51,50 @@
     letter-spacing: -0.57px;
   }
   .AdminContainer {
-    position: absolute; /* or relative, depending on the context */
-    top: 35px; /* Adjust as needed */
-    left: 0; /* Adjust as needed */
-    width: auto;
-    height: auto;
-    padding: 20px; /* Optional: Adjust padding as needed */
-  }
-  
-  .AdminHighlight1 {
-    position: relative; /* Adjust to align properly within the container */
-    top: 50px;
-    left: 54px;
-    bottom: 20px;
-    font: 600 18px/1.38 "Open Sans", Helvetica, Arial, serif;
-    color: rgb(0, 0, 0);
-  }
-  
-  .AdminRect5 {
-    position: relative; /* Adjust to align properly within the container */
-    top: 37px; /* Adjust this to move it relative to AdminHighlight1 */
-    left: 40px;
-    width: 616px;
-    height: 60px;
-    background-color: rgba(217, 217, 217, 0);
-    border-radius: 10px;
-    border: 1px solid rgb(217, 217, 217);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .AdminInput {
-    width: 100%;
-    height: 100%;
-    border: none;
-    outline: none;
-    padding: 0 10px;
-    font: 400 18px/1.5 "Poppins", Helvetica, Arial, serif;
-    color: rgb(157, 155, 155);
-    border-radius: 10px;
-  }
-  
+  position: relative; /* Use relative if you don't need absolute positioning */
+  top: 35px; /* Adjust as needed */
+  left: 0; /* Adjust as needed */
+  width: auto;
+  height: auto;
+  padding: 20px; /* Optional: Adjust padding as needed */
+}
+
+.AdminHighlight1 {
+  position: relative; /* Adjust to align properly within the container */
+  top: 50px;
+  left: 54px;
+  bottom: 20px;
+  font: 600 18px/1.38 "Open Sans", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0);
+}
+
+.AdminRect5 {
+  position: relative; /* Adjust to align properly within the container */
+  top: 37px; /* Adjust this to move it relative to AdminHighlight1 */
+  left: 40px;
+  width: 616px;
+  height: 60px;
+  background-color: rgba(217, 217, 217, 0);
+  border-radius: 10px;
+  border: 1px solid rgb(217, 217, 217);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.AdminInput {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  padding: 0 10px;
+  font: 400 18px/1.5 "Poppins", Helvetica, Arial, serif;
+  color: rgb(0, 0, 0); /* Ensure the text color is visible */
+  border-radius: 10px;
+  background-color: transparent; /* Ensure the background is not opaque */
+  z-index: 1; /* Ensure the input is on top */
+}
+
   .AdminHighlight2 {
     display: none; /* This element is hidden as we are using the placeholder in the input */
   }
@@ -141,7 +144,7 @@
  
 
   .AdminFileContainer {
-    top:400px;
+    top:230px;
     left:40px;
     position: relative;
    
@@ -189,75 +192,61 @@
 
   .AdminTextContainer {
     position: relative;
-    top:470px;
-    left:100px
+    top: 300px;
+    left: 400px; /* Déplacement vers la droite */
+    display: flex;
+    gap: 30px; 
+    
   }
   
-  .AdminRect3 {
-    position: absolute;
-    top: 50%; /* Centrer verticalement */
-    left: 50%; /* Centrer horizontalement */
-    transform: translate(-50%, -50%); /* Ajuster pour le centrage */
-    width: 100px;
-    height: 25px;
-    background-color: rgb(0, 97, 177);
-    border-radius: 2px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.247);
-  }
-  
-  .AdminText1 {
-    position: absolute;
-    top: 50%; /* Centrer verticalement */
-    left: 50%; /* Centrer horizontalement */
-    transform: translate(-50%, -50%); /* Ajuster pour le centrage */
+  /* Styles communs pour les boutons */
+  .AdminButton {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: auto; /* Ajuster la largeur automatiquement */
-    height: auto; /* Ajuster la hauteur automatiquement */
-    font: 400 14px/2.7 "Open Sans", Helvetica, Arial, serif;
-    color: rgb(255, 255, 255);
-    text-align: center;
-    letter-spacing: -0.29px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.247); 
+    cursor: pointer;
   }
   
-
-
-
-
-
-
-.AdminTextContainer2 {
-    position: relative;
-    top:470px;
-    left:100px
-  }
-  
-  .AdminRect4 {
-    position: absolute;
-    top: 50%; /* Centrer verticalement */
-    left: 50%; /* Centrer horizontalement */
-    transform: translate(-50%, -50%); /* Ajuster pour le centrage */
-    width: 100px;
-    height: 25px;
-    background-color: rgb(0, 97, 177);
+  .AdminRect3 {
+    width: 110px;
+    height: 30px;
     border-radius: 2px;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.247);
   }
   
   .AdminText2 {
     position: absolute;
-    top: 50%; /* Centrer verticalement */
-    left: 50%; /* Centrer horizontalement */
-    transform: translate(-50%, -50%); /* Ajuster pour le centrage */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: auto; /* Ajuster la largeur automatiquement */
-    height: auto; /* Ajuster la hauteur automatiquement */
     font: 400 14px/2.7 "Open Sans", Helvetica, Arial, serif;
-    color: rgb(255, 255, 255);
     text-align: center;
     letter-spacing: -0.29px;
+  }
+  
+  
+  .AdminRectAnnuler {
+    background-color: #fff; 
+  }
+  
+  .AdminTextAnnuler {
+    color: #000; 
+  }
+  
+ 
+  .AdminRectEnvoyer {
+    background-color: rgb(0, 97, 177); 
+  }
+  
+  .AdminTextEnvoyer {
+    color: rgb(255, 255, 255); 
+  }
+  .AdminFilePreview {
+    width: 360px;
+    padding: 8px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgb(217, 217, 217);
+    margin-left: 20px;
+    display: flex; /* Pour aligner horizontalement les éléments enfants */
+    align-items: center; /* Pour aligner verticalement les éléments enfants */
   }
   

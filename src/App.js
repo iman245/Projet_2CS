@@ -4,6 +4,8 @@ import Enseignants from'./pages/Annuaire/Enseignants'
 import Alumni from './pages/Annuaire/Alumni';
 import Projets from './pages/Lmcs/Projets';
 import Equipe from './pages/Lmcs/Equipe';
+import Historique from './pages/Admin/Historique'
+
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LandingPage from './pages/LandingPage/LandingPage';
 import Evenements from './pages/EventsPage/Evenements';
@@ -23,6 +25,7 @@ import DetailsClubsFinale from './pages/DetailsClubsFinale/DetailsClubsFinale';
 import ClubsFinal from './pages/ClubsFinal/ClubsFinal';
 import EsiFinal from './pages/EsiFinal/EsiFinal';
 import Lcsi from './pages/LCSI/Lcsi';
+import Lmcs from './pages/Lmcs/Lmcs'
 import Post from './pages/Postgraduation/Post';
 import Chercheur from './pages/Chercheur/Chercheur';
 import Publication from './pages/Chercheur/Publications'
@@ -50,12 +53,16 @@ function App() {
         < Route path ="/Annuaire/Enseignants" element={<Enseignants/> }/>
         < Route path ="/Annuaire/Alumni" element ={<Alumni/>}/>
         < Route path ="/LMCSProjects" element ={<Projets/>}/>
+       
+
         < Route path ="/LMCSTeams" element ={<Equipe/>}/>
         < Route path ="/lcsi" element ={<Lcsi/>}/>
+        < Route path ="/lmcs" element ={<Lmcs/>}/>
         < Route path ="/postraduation" element ={<Post/>}/>
         < Route path ="/chercheur" element ={<Chercheur/>}/>
         < Route path ="/publication" element ={<Publications/>}/>
         < Route path ="/FormAdmin" element ={<FormAdmin/>}/>
+        < Route path ="/Historique" element ={<Historique/>}/>
       
       
         < Route path ="/AvantPromo" element ={<AvantPromo/>}/>

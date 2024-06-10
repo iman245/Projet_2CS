@@ -1,5 +1,5 @@
 import {React, useState} from 'react';
-import  './Lcsi.css';
+import  './Lmcs.css';
 import Lcsiback from '../../Images/Lcsiback.png';
 import lcsib from '../../Images/lcsib.png';
 import a from '../../Images/a.png';
