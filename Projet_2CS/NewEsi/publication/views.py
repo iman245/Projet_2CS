@@ -10,6 +10,41 @@ from rest_framework.permissions import AllowAny
 from django.db.models import Q
 from .decorators import *
 from django.core.mail import send_mail
+from langchain_openai import ChatOpenAI
+from langchain_community.utilities import SQLDatabase
+from sqlalchemy import create_engine
+from langchain_community.agent_toolkits import create_sql_agent
+import pandas as pd
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def query_publications(request):
+    query = request.GET.get('query', '')
+    results = []
+
+    if query:
+        df=pd.read_csv(r'C:\Users\Dell\Desktop\Projet_2CS\Projet_2CS\NewEsi\publication\Data\events.csv')
+        engine = create_engine("sqlite:///db.sqlite3")
+        try:
+            df.to_sql("events", engine, index=False)
+        except:
+            pass    
+        db = SQLDatabase(engine=engine)
+        llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0, api_key='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')
+        agent_executor = create_sql_agent(llm, db=db, agent_type="openai-tools", verbose=True)
+        
+        response = agent_executor.invoke({"input": f"{query} ## Answer one answer that fits the best"})
+        results = response['output']
+
+    data = {
+        'query': query,
+        'results': results
+    }
+    serializer = PublicationQuerySerializer(data=data)
+    if serializer.is_valid():
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors, status=400)
+
 @api_view(['GET'])
 @user_types_required('adminstrateur')
 def get_all_users(request):

@@ -131,3 +131,9 @@ class CategorieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categorie
         fields = ['id_categorie', 'nom']
+
+
+class PublicationQuerySerializer(serializers.Serializer):
+    query = serializers.CharField(max_length=255)
+    results = serializers.CharField()
+       
