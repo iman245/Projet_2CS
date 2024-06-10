@@ -143,7 +143,7 @@ class Publication(models.Model):
     date_debut = models.DateTimeField(null=True, blank=True)
     date_fin = models.DateTimeField(null=True, blank=True)
     date_publication = models.DateTimeField(null=True, blank=True)
-    #categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE)#if category gets deleted all post gets deleted 
+    categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE)#if category gets deleted all post gets deleted 
     #I don't think it should be a class by it's own if we won't change the class frequently
     # category=models.CharField(max_length=50)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='publications',null=True)

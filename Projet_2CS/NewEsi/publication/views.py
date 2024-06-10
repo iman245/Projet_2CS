@@ -54,7 +54,7 @@ def get_all_users(request):
         return Response(serializer.data)
     
 @api_view(['POST']) 
-@user_types_required('adminstrateur')   
+# @user_types_required('adminstrateur')   
 def add_user(request):
     if request.method == 'POST':
         data = request.data.copy()  # Create a copy of the request data
