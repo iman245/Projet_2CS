@@ -73,15 +73,20 @@ def add_user(request):
 def login_user(request):
     if request.method == 'POST':
         email = request.data.get('email', None)
-        if not email:
+        password = request.data.get('password', None)
+        
+        if not password :
             return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not email:
+            return Response({"error": "password  is required"}, status=status.HTTP_400_BAD_REQUEST)
+        if Utilisateur.objects.filter(email=email , password = password).exists():
+            user = Utilisateur.objects.get(email=email )
+            token = Token.objects.get(user=user)
+            return Response({"token": token.key}, status=status.HTTP_200_OK if user else status.HTTP_201_CREATED)
         if Utilisateur.objects.filter(email=email).exists():
-            user = Utilisateur.objects.get(email=email)
+            return Response({"error": "mot de passe incorrect"}, status=status.HTTP_404_NOT_FOUND)
         else:
-            user = Utilisateur.objects.create(email=email)
-
-        token = Token.objects.get(user=user)
-        return Response({"token": token.key}, status=status.HTTP_200_OK if user else status.HTTP_201_CREATED)
+            return Response({"error": "Vous n'avez pas de compte"}, status=status.HTTP_404_NOT_FOUND)
 
         
 @api_view(['PUT'])
@@ -244,27 +249,47 @@ def delete_categorie(request, categorie_id):
     return Response({"success": "Category deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def search_publication(request):
     if request.method == 'GET':
         query_params = request.query_params
+        auth_header = request.headers.get('Authorization')
+        token_key = auth_header.split(' ')[1]
+        
+        try:
+            user = Token.objects.get(key=token_key).user
+        except Token.DoesNotExist:
+            return Response({"user.id"}, status=status.HTTP_400_BAD_REQUEST)
         filters = {}
-
+        publisher = None
+        
+        
+        
         # Iterate over query parameters
         for key, value in query_params.items():
-            # Exclude the 'query' parameter
-            if key != 'query' and value:
+            if key == 'publisher' and value:
+                publisher = value
+            elif key != 'query' and value:
                 # Add filter condition if the field is not empty
                 filters[key + '__icontains'] = value
-
-        if filters:
-            # Construct Q objects for filtering
-            conditions = [Q(**{key: value}) for key, value in filters.items()]
-            # Combine Q objects using OR operator
-            publications = Publication.objects.filter(*conditions)
+        
+        if publisher:
+            publications = Publication.objects.filter(publisher_id=publisher)
+            if filters:
+                conditions = [Q(**{key: value}) for key, value in filters.items()]
+                publications = publications.filter(*conditions)
         else:
-            # If no filters are provided, return all publications
-            publications = Publication.objects.all()
-
+            if filters:
+                # Construct Q objects for filtering
+                conditions = [Q(**{key: value}) for key, value in filters.items()]
+                # Combine Q objects using AND operator
+                publications = Publication.objects.filter(*conditions)
+            else:
+                # If no filters are provided, return all publications
+                publications = Publication.objects.all()
+        
         serializer = PublicationSerializer(publications, many=True)
         return Response(serializer.data)
     else:
