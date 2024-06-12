@@ -1,8 +1,8 @@
 import pandas as pd
 from django.core.management.base import BaseCommand
-from publication.models import Publication,Utilisateur
+from publication.models import Publication, Utilisateur,Categorie
 from django.utils.dateparse import parse_datetime
-
+import random
 class Command(BaseCommand):
     help = 'Load data from CSV into the Publication model'
 
@@ -17,15 +17,17 @@ class Command(BaseCommand):
             except ValueError:
                 self.stderr.write(f"Invalid date format for row: {row['Date']}. Skipping this row.")
                 continue
+            
+       
             Publication.objects.create(
-                titre=rf"{row['Title']} By {row['organisateur']}",
+                titre=f"{row['Title']} By {row['organisateur']}",
                 description=row.get('Publication', ''),
                 # Assuming image and other fields are not available in CSV and will be handled separately
                 etat='valide',
                 type_publication='event',
                 date_publication=date_publication,
-                publisher=default_publisher
+                publisher=default_publisher,
+                categorie_id=1
             )
         
-
         self.stdout.write(self.style.SUCCESS('Data loaded successfully'))

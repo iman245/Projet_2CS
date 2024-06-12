@@ -15,26 +15,60 @@ from langchain_community.utilities import SQLDatabase
 from sqlalchemy import create_engine
 from langchain_community.agent_toolkits import create_sql_agent
 import pandas as pd
+from langchain_community.llms import HuggingFaceEndpoint
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+import json
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def query_publications(request):
     query = request.GET.get('query', '')
     results = []
-
+    HUGGINGFACEHUB_API_TOKEN =  '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'
     if query:
         df=pd.read_csv(r'C:\Users\Dell\Desktop\Projet_2CS\Projet_2CS\NewEsi\publication\Data\events.csv')
-        engine = create_engine("sqlite:///db.sqlite3")
-        try:
-            df.to_sql("events", engine, index=False)
-        except:
-            pass    
-        db = SQLDatabase(engine=engine)
-        llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0, api_key='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')
-        agent_executor = create_sql_agent(llm, db=db, agent_type="openai-tools", verbose=True)
-        
-        response = agent_executor.invoke({"input": f"{query} ## Answer one answer that fits the best"})
-        results = response['output']
+        df.rename(columns={'Concatenated': 'events'}, inplace=True)
 
+        #df=pd.read_csv(r'C:\Users\Dell\Desktop\Projet_2CS\Projet_2CS\NewEsi\publication\Data\events.csv')
+        # engine = create_engine("sqlite:///events.db")
+        # try:
+        #     df.to_sql("events", engine)
+        # except:
+        #     pass    
+        # db = SQLDatabase(engine=engine)
+        
+
+        # tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B")
+        # model = AutoModelForCausalLM.from_pretrained("meta-llama/Meta-Llama-3-8B")
+        # model=pipeline( model=model)
+        llm = HuggingFaceEndpoint(
+        huggingfacehub_api_token='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',
+        repo_id = "mistralai/Mistral-7B-Instruct-v0.2",
+        # repo_id="Xenova/gpt-4o",
+        max_new_tokens=512,
+        top_k=10,
+        top_p=0.95,
+        typical_p=0.95,
+        temperature=0.01,
+        repetition_penalty=1.03,
+        streaming=True,
+    )
+        # agent_executor = create_sql_agent(llm, db=db, verbose=True,handle_parsing_errors=True)
+        
+        # response = agent_executor.invoke({"input": f"{query} ## Answer one answer that fits the best"})
+        # results = response['output']
+        df_json = df.to_json(orient='records')
+
+        # Include JSON string in the input data
+        input_data = {
+            'input': f"{query} ## Answer one answer that fits the best and is most close to the question from the following data. Don't answer outside the data, look at all data before answering and if there is no information in the data say: 'there is no information in the database to answer your question' #### Data= {df_json}"
+        }
+
+        input_data_str = json.dumps(input_data)
+
+        # Invoke the language model with the input data string
+        results = llm.invoke(input_data_str)
+        # results=model(input_data_str)
     data = {
         'query': query,
         'results': results
