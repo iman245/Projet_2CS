@@ -71,7 +71,7 @@ def query_publications(request):
         # results=model(input_data_str)
     data = {
         'query': query,
-        'results': results
+        'results': results[:-4]
     }
     serializer = PublicationQuerySerializer(data=data)
     if serializer.is_valid():
