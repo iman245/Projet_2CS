@@ -4,6 +4,9 @@ REQUIREMENTS_FILE="./env/requirements.txt"
 # Install dependencies from requirements.txt
 pip install -r "$REQUIREMENTS_FILE"
 
+# Navigate to the directory containing manage.py
+cd Projet_2CS/NewEsi/
+
 # Collect static files
 python manage.py collectstatic --no-input
 
@@ -11,5 +14,6 @@ python manage.py collectstatic --no-input
 python manage.py migrate
 
 # Start the application
-gunicorn Projet_2CS/NewEsi/NewEsi/wsgi:application
+gunicorn NewEsi.wsgi:application
+
 
