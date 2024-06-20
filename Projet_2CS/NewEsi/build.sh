@@ -11,5 +11,5 @@ python manage.py collectstatic --no-input
 python manage.py migrate
 
 # Start the application
-gunicorn Projet_2CS.NewEsi.NewEsi.wsgi:application
+gunicorn Projet_2CS/NewEsi/NewEsi/wsgi:application
 
