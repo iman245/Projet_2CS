@@ -12,7 +12,7 @@ python manage.py collectstatic --no-input
 
 # Apply database migrations
 python manage.py migrate
-cd Projet_2CS/NewEsi/NewEsi
+
 
 
 
