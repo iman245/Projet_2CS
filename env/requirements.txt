@@ -1,4 +1,4 @@
-
+langchain_openai== 0.1.8
 asgiref==3.8.1
 Django==3.2.1
 django-cors-headers==4.3.1
