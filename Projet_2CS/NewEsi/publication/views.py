@@ -1042,10 +1042,65 @@ def annuler_publication(request, pk):
 
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def search_publication_noauth(request):
+    if request.method == 'GET':
+        query_params = request.query_params
+
+        filters = {}
+        publisher = None
+        # Iterate over query parameters
+        for key, value in query_params.items():
+            if key == 'publisher' and value:
+                publisher = value
+            elif key != 'query' and value:
+                # Add filter condition if the field is not empty
+                filters[key + '__icontains'] = value
+
+        if publisher:
+            publications = Publication.objects.filter(publisher_id=publisher)
+            if filters:
+                conditions = [Q(**{key: value}) for key, value in
+filters.items()]
+                publications = publications.filter(*conditions)
+        else:
+            if filters:
+                # Construct Q objects for filtering
+                conditions = [Q(**{key: value}) for key, value in
+filters.items()]
+                # Combine Q objects using AND operator
+                publications = Publication.objects.filter(*conditions)
+            else:
+                # If no filters are provided, return all publications
+                publications = Publication.objects.all()
+
+        serializer = PublicationSerializer(publications, many=True)
+        return Response(serializer.data)
+    else:
+        return Response("Invalid request method",
+status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+#get_event_publication
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_event_publications(request):
+    if request.method == 'GET':
+        queryset =
+Publication.objects.filter(type_publication='event',etat='valide')
+        serializer = PublicationSerializer(queryset, many=True)
+        return Response(serializer.data)
 
-
+#delete all events_publications
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def delete_event_publications(request):
+    if request.method == 'DELETE':
+        # Filtrer et supprimer toutes les publications de type 'event'
+        deleted_count, _ =
+Publication.objects.filter(type_publication='event').delete()
+        return Response({'deleted_count': deleted_count}, status=200)
 
 
 
