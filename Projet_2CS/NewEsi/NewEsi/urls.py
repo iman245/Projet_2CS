@@ -44,6 +44,7 @@ urlpatterns = [
     path('Devis/demande',add_devis,name='add_devis'),
     path('Devis',get_all_devis,name='get_all_devis'),
     path('chercheur',chercheur_list,name='chercheur'),
+     path('publication/<int:pk>/', edit_publication, name='edit_publication'),
 
     path('partenair_labo',partenaire_labo_list,name='partenaire_labo_list'),
     path('add_partenair_labo',add_partenaire_labo,name='add_partenaire_labo'),
