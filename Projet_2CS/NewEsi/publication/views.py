@@ -103,6 +103,7 @@ def add_user(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_user(request):
@@ -117,11 +118,13 @@ def login_user(request):
         if Utilisateur.objects.filter(email=email , password = password).exists():
             user = Utilisateur.objects.get(email=email )
             token = Token.objects.get(user=user)
-            return Response({"token": token.key}, status=status.HTTP_200_OK if user else status.HTTP_201_CREATED)
+            return Response({"token": token.key, "is_adminstrateur": user.is_adminstrateur, "is_editeur": user.is_editeur}, status=status.HTTP_200_OK)
         if Utilisateur.objects.filter(email=email).exists():
             return Response({"error": "mot de passe incorrect"}, status=status.HTTP_404_NOT_FOUND)
         else:
-            return Response({"error": "Vous n'avez pas de compte"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Vous n'avez pas de compte"}, status=status.HTTP_404_NOT_FOUND)@api_view(['PUT'])
+
+
 
         
 @api_view(['PUT'])
@@ -284,7 +287,6 @@ def delete_categorie(request, categorie_id):
     categorie.delete()
     return Response({"success": "Category deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET'])
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -292,59 +294,46 @@ def search_publication(request):
     if request.method == 'GET':
         query_params = request.query_params
         auth_header = request.headers.get('Authorization')
-        token_key = auth_header.split(' ')[1]
-        
-        try:
-            user = Token.objects.get(key=token_key).user
-        except Token.DoesNotExist:
-            return Response({"user.id"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if auth_header:
+            try:
+                token_key = auth_header.split(' ')[1]
+                user = Token.objects.get(key=token_key).user
+            except Token.DoesNotExist:
+                return Response({"error": "Token not found"}, status=status.HTTP_400_BAD_REQUEST)
+            except IndexError:
+                return Response({"error": "Token format is invalid"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error": "Authorization header is missing"}, status=status.HTTP_400_BAD_REQUEST)
+
         filters = {}
         publisher = None
-        
-        
         
         # Iterate over query parameters
         for key, value in query_params.items():
             if key == 'publisher' and value:
                 publisher = value
             elif key != 'query' and value:
-                # Add filter condition if the field is not empty
                 filters[key + '__icontains'] = value
         
         if publisher:
-            publications = Publication.objects.filter(publisher_id=publisher)
-            if filters:
-                conditions = [Q(**{key: value}) for key, value in filters.items()]
-                publications = publications.filter(*conditions)
+            publications = Publication.objects.filter(publisher_id=publisher, **filters)
         else:
             if filters:
-                # Construct Q objects for filtering
                 conditions = [Q(**{key: value}) for key, value in filters.items()]
-                # Combine Q objects using AND operator
                 publications = Publication.objects.filter(*conditions)
             else:
-                # If no filters are provided, return all publications
                 publications = Publication.objects.all()
         
         serializer = PublicationSerializer(publications, many=True)
         return Response(serializer.data)
     else:
-        return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
-# PUT edit a publication by ID
-@api_view(['PUT'])
-@user_types_required('editeur')
-def edit_publication(request, pk):
-    try:
-        publication = Publication.objects.get(pk=pk)
-    except Publication.DoesNotExist:
-        return Response("Publication not found", status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Invalid request method"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    if request.method == 'PUT':
-        serializer = PublicationSerializer(publication, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 @api_view(['PUT'])
 @user_types_required('adminstrateur')
 def validate_publication(request, pk):
@@ -999,6 +988,41 @@ def get_all_services(request):
 
 
 
+@api_view(['GET'])
+def get_publication(request, id):
+    try:
+        publication = Publication.objects.get(pk=id)
+        serializer = PublicationSerializer(publication)
+        return Response(serializer.data)
+    except Publication.DoesNotExist:
+        return Response("Publication introuvable", status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+
+
+@api_view(['PUT'])
+@user_types_required('adminstrateur')
+def annuler_publication(request, pk):
+    try:
+        publication = Publication.objects.get(pk=pk)
+
+    except Publication.DoesNotExist:
+        return Response("Publication not found", status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        # Update the 'etat' attribute to 'valide'
+        publication.etat = 'annulée'
+        # Save the changes to the publication object
+        publication.save()
+
+        # Serialize the updated publication object
+        serializer = PublicationSerializer(publication)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 
