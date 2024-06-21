@@ -92,6 +92,9 @@ urlpatterns = [
     path('annuaire/grades/', get_all_grades, name='get_all_grades'),
     path('annuaire/promotions/', get_all_promotions, name='get_all_promotions'),
     path('annuaire/services/', get_all_services, name='get_all_services'),
+    path('publication1/<int:id>/', get_publication, name='get_publication'),
+    path('publication/annuler/<int:pk>/',annuler_publication, name='annuler_publication'),
+
 
     path('event/add', add_event, name='add_event'),
     path('query_publications/', query_publications, name='query_publications'),
