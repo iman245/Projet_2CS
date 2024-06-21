@@ -104,6 +104,22 @@ def add_user(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+@api_view(['PUT'])
+@user_types_required('editeur')
+def edit_publication(request, pk):
+    try:
+        publication = Publication.objects.get(pk=pk)
+    except Publication.DoesNotExist:
+        return Response("Publication not found", status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = PublicationSerializer(publication, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_user(request):
