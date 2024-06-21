@@ -1087,8 +1087,7 @@ status=status.HTTP_405_METHOD_NOT_ALLOWED)
 @permission_classes([AllowAny])
 def get_event_publications(request):
     if request.method == 'GET':
-        queryset =
-Publication.objects.filter(type_publication='event',etat='valide')
+        queryset =Publication.objects.filter(type_publication='event',etat='valide')
         serializer = PublicationSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -1098,8 +1097,7 @@ Publication.objects.filter(type_publication='event',etat='valide')
 def delete_event_publications(request):
     if request.method == 'DELETE':
         # Filtrer et supprimer toutes les publications de type 'event'
-        deleted_count, _ =
-Publication.objects.filter(type_publication='event').delete()
+        deleted_count, _ = Publication.objects.filter(type_publication='event').delete()
         return Response({'deleted_count': deleted_count}, status=200)
 
 
