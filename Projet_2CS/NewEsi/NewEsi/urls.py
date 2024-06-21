@@ -31,7 +31,6 @@ urlpatterns = [
     path('publication/add/', add_publication, name='add_publication'),
     path('publication/validate/<int:pk>/', validate_publication, name='validate_publication'),
     path('publication/refuse/<int:pk>/', refuse_publication, name='validate_publication'),
-    path('publication/<int:pk>/', edit_publication, name='edit_publication'),
     path('publication/search/',search_publication,name='search_publication'),
     path('publication/delete/<int:pk>/', delete_publication, name='delete_publication'),
     path('partenaire/add',add_partenaire,name='add_partenaire'),
