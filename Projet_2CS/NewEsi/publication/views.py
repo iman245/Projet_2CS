@@ -88,7 +88,8 @@ def get_all_users(request):
         return Response(serializer.data)
     
 @api_view(['POST']) 
-# @user_types_required('adminstrateur')   
+# @user_types_required('adminstrateur')  
+@permission_classes([AllowAny])
 def add_user(request):
     if request.method == 'POST':
         data = request.data.copy()  # Create a copy of the request data
@@ -263,6 +264,7 @@ def add_actualité(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def create_categorie(request):
     if request.method == 'POST':
         serializer = CategorieSerializer(data=request.data)
