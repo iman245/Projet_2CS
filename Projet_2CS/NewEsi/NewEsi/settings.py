@@ -191,7 +191,7 @@ CORS_ALLOW_ALL_ORIGINS=True
 #cloudinary-django integration
 
 cloudinary.config(
-    cloud_name = "quasarit",
+    cloud_name = "dtsblsbv9",
   	api_key = "693944354519146",
   	api_secret = "HtzX5g5mJCAQIUHj0TdyoRSnm4s"
 )
