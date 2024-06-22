@@ -14,8 +14,7 @@ python manage.py collectstatic --no-input
 # Apply database migrations
 python manage.py makemigrations
 python manage.py migrate
-python manage.py load_publication
-python manage.py load_enseignant_data.py
+
 
 
 
