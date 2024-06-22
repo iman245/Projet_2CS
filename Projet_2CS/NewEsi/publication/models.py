@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils import timezone
 from rest_framework.authtoken.models import Token
+from cloudinary.models import CloudinaryField
 import re
 
 class UserManager(BaseUserManager):
@@ -137,7 +138,8 @@ class Publication(models.Model):
     id_publication = models.AutoField(primary_key=True)
     titre = models.CharField(max_length=255)
     description = models.TextField()
-    image = models.ImageField(upload_to='publications/', null=True, blank=True)
+   
+    image = CloudinaryField('image', null=True, blank=True)
     etat = models.CharField(max_length=50)  # valide, en attente, rejeté
     type_publication = models.CharField(max_length=50)  # event/actualité/article
     date_debut = models.DateTimeField(null=True, blank=True)
@@ -307,7 +309,7 @@ class Annuaire(models.Model):
     description = models.TextField()
     contact = models.IntegerField(null=True, blank=True)
     email = models.EmailField(max_length=255)
-    photo = models.ImageField(upload_to='annuaire_photos/', null=True, blank=True)
+    photo = CloudinaryField('image', null=True, blank=True)
     linkedin = models.CharField(max_length=200, blank=True, null=True)
     mot_cle = models.CharField(max_length=100, blank=True, null=True)
     
