@@ -202,6 +202,7 @@ def delete_user(request, pk):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_publications_by_category(request, category):
     try:
         publications = Publication.objects.filter(category=category)
@@ -214,6 +215,7 @@ def get_publications_by_category(request, category):
 #This is for publication
     
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_all_publications(request):
     if request.method == 'GET':
         queryset = Publication.objects.all()
@@ -408,6 +410,7 @@ def delete_publication(request, pk):
 #club
 # Get all members of a club
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_club_members(request, club_id):
     if request.method == 'GET':
         try:
@@ -437,6 +440,7 @@ def add_club_member(request, club_id):
 
 # Get all clubs
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_all_clubs(request):
     if request.method == 'GET':
         clubs = Club.objects.all()
@@ -477,6 +481,7 @@ def delete_club(request, club_id):
         return Response("Club deleted successfully", status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_club_evenement_publications(request, club_id):
     club = get_object_or_404(Club, id_club=club_id)
     if request.method == 'GET':
@@ -523,6 +528,7 @@ def delete_member(request, member_id):
 
 # Get Members by Name
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_members_by_name(request, club_id, name):
     if request.method == 'GET':
         club = get_object_or_404(Club, id_club=club_id)
@@ -532,6 +538,7 @@ def get_members_by_name(request, club_id, name):
 
 # Get Clubs by Name
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_clubs_by_name(request, name):
     if request.method == 'GET':
         clubs = Club.objects.filter(nom__icontains=name)
@@ -541,6 +548,7 @@ def get_clubs_by_name(request, name):
 
 
 @api_view(['POST'])
+
 @user_types_required('directeur_relex')
 def add_partenaire(request):
    if request.method == 'POST':
@@ -555,6 +563,7 @@ def add_partenaire(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_all_partenaire(request):
     if request.method == 'GET':
         queryset = Partenaire.objects.all()
@@ -562,6 +571,7 @@ def get_all_partenaire(request):
         return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_partenaire(request):
     partenaire_id = request.query_params.get('id')
     if partenaire_id is None:
@@ -576,6 +586,7 @@ def get_partenaire(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def post_demande_partenariat(request):
     if request.method == 'POST':
         serializer = DemandePartenariatSerializer(data=request.data)
@@ -678,6 +689,7 @@ def add_partenaire_labo(request):
         return Response(serializer.errors, status=400)
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def partenaire_labo_list(request):
     if request.method == 'GET':
         queryset = Partenaire_labo.objects.all()
@@ -686,6 +698,7 @@ def partenaire_labo_list(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def laboratoire_list(request):
     if request.method == 'GET':
         queryset = Laboratoire.objects.all()
@@ -723,6 +736,7 @@ def add_chercheur(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def chercheur_list(request):
     if request.method == 'GET':
         queryset = Utilisateur.objects.filter(is_chercheur=True)
@@ -745,6 +759,7 @@ def chercheur_list(request):
 #         return Response(serializer.errors, status=400)
     
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def equipe_projet_list(request):
     if request.method == 'GET':
         # Assuming you want to filter equipe by authenticated Chercheur
@@ -781,6 +796,7 @@ def add_equipe_recherche(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def equipe_recherche_list(request):
     if request.method == 'GET':
         queryset = Equipe_Recherche.objects.all()
@@ -799,7 +815,7 @@ def add_projet(request):
         return Response(serializer.errors, status=400)
 
 @api_view(['GET'])
-
+@permission_classes([AllowAny])
 def projet_list(request):
     if request.method == 'GET':
         queryset = Projet.objects.all()
@@ -819,6 +835,7 @@ def add_theme_recherche(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def theme_recherche_list(request):
     if request.method == 'GET':
         queryset = Theme_Recherche.objects.all()
@@ -828,6 +845,7 @@ def theme_recherche_list(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def PoserQuestion( request):
      serializer = QuestionSerializer(data=request.data)
      if serializer.is_valid():
@@ -847,6 +865,7 @@ def RepondreQuestion( request, question_id):
 
 
 @api_view([ 'GET'])
+@permission_classes([AllowAny])
 def GetQuestions(request, category):
      questions = Question.objects.filter(category=category)
      data = []
@@ -889,12 +908,14 @@ def add_annuaire(request):
         return Response("Invalid request method", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_all_annuaire(request):
     annuaires = Annuaire.objects.all()
     serializer = AnnuaireSerializer(annuaires, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_Annuaire(request, pk):
     try:
         entry = Annuaire.objects.get(pk=pk)
@@ -936,6 +957,7 @@ def delete_Annuaire(request, pk):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def filter_enseignant_by_grade_and_mot_cle(request):
     grade = request.query_params.get('grade')
     mot_cle = request.query_params.get('mot_cle')
@@ -952,6 +974,7 @@ def filter_enseignant_by_grade_and_mot_cle(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def filter_administration_by_mot_cle_and_service(request):
     service= request.query_params.get('service')
     mot_cle = request.query_params.get('mot_cle')
@@ -969,6 +992,7 @@ def filter_administration_by_mot_cle_and_service(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def filter_alumnie_by_promotion(request):
     promotion= request.query_params.get('promotion')
     mot_cle = request.query_params.get('mot_cle')
@@ -986,6 +1010,7 @@ def filter_alumnie_by_promotion(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_all_grades(request):
     grades_set = set(choice[1] for choice in Enseignant_Annuaire.GRADE_CHOICES)
     grades_list = list(grades_set)
@@ -993,11 +1018,13 @@ def get_all_grades(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_all_promotions(request):
     promotions = Alumnie_Annuaire.objects.values_list('promotion', flat=True).distinct()
     return Response({'promotions': promotions})
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_all_services(request):
     services = Administration_Annuaire.objects.values_list('service', flat=True).distinct()
     return Response({'services': services})
@@ -1005,6 +1032,7 @@ def get_all_services(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_publication(request, id):
     try:
         publication = Publication.objects.get(pk=id)
